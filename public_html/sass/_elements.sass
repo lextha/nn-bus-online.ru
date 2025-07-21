@@ -1,0 +1,240 @@
+*
+    padding: 0
+    margin: 0
+    box-sizing: border-box
+    border: none
+    outline: none
+    letter-spacing: -0.3px
+
+:root
+    --prime: #14ACAF
+    --pink: #E44E6D
+    --orange: #ED7D2B
+    --blue: #394166
+    --light-green: #00F845
+    --dark-green: #04B400
+    --red: #FF0000
+    --gray: #D9D9D9
+    --white: white
+    --black: black
+
+$black: var(--black)
+$prime: var(--prime)
+$pink: var(--pink)
+$orange: var(--orange)
+$blue: var(--blue)
+$white: var(--white)
+$light-green: var(--light-green)
+$dark-green: var(--dark-green)
+$gray: var(--gray)
+$red: var(--red)
+
+body
+    color: $blue
+    font-family: "Golos Text", sans-serif
+    font-optical-sizing: auto
+    font-weight: 428
+    letter-spacing: -0.2px
+    font-style: normal
+
+    // &.is_active
+    //     overflow: hidden
+
+.app
+    min-height: 100vh
+    position: relative
+    z-index: 1
+    max-width: 900px
+    margin: 0 auto
+    display: flex
+    flex-direction: column
+    box-shadow: 0px 4px 4px 0px #00000040
+    background-color: #fff
+    @media screen and ( min-width: 650px )
+        background-color: #FCFCFC
+
+h1
+    margin: 0
+
+img
+    max-width: 100%
+
+a,
+button
+    color: $black
+    text-decoration: none
+    transition: all ease .3s
+    background-color: transparent
+    &:active
+        transform: scale(.96)
+
+    &:hover
+        opacity: .8
+
+.btn
+    display: inline-block
+    padding: 3px 6px
+    border: 1px solid $blue
+    border-radius: 5px
+    font-size: 11px
+    color: $blue
+
+b,strong
+    font-weight: 500
+
+.dropdown
+    display: block
+    transition: all ease .3s
+    background-color: $blue
+    width: 100%
+    position: relative
+    z-index: 999
+    &__btn
+        color: #BBBBBB
+        display: inline-block
+        text-align: left
+        font-size: 12px
+        padding: 8px 21px 8px 15px
+        background-repeat: no-repeat
+        background-position: top 13px right
+        background-size: 12px auto
+        background-image: url('../img/dropdown-open.svg')
+        margin-bottom: 14px
+        &.is_active
+            background-position: center right
+            background-image: url('../img/dropdown-close.svg')
+
+    &-content
+        display: none
+        position: absolute
+        top: 100%
+        left: 0
+        width: 100%
+        z-index: 999
+        background-color: $gray
+
+    &__item
+        color: $white
+        font-size: 13px
+        padding: 12px 15px 12px 53px
+        display: block
+        width: 100%
+        text-align: left
+        border-top: 1px solid #C0C0C0
+        background-repeat: no-repeat
+        background-position: center left 25px
+        &.is_active
+            background-image: url('../img/dropdown-check.svg')
+
+    &.is_active
+        background-color: $gray
+        .dropdown
+            &__btn,
+            &__item
+                color: $blue
+
+.tab
+    display: flex
+    justify-content: center
+    align-items: stretch
+    gap: 10px
+    margin: 16px 0 20px
+    &__btn
+        background-color: $blue
+        color: $white
+        text-align: center
+        padding-top: 12px
+        width: 36px
+        height: 36px
+        display: inline-block
+        text-align: center
+        font-size: 11px
+        &.is_active
+            pointer-events: none
+            box-shadow: 0px 0px 4px 0px #00000040 inset
+            background-color: $pink
+
+.table
+    width: 100%
+    margin: 0 0 20px
+    td, th
+        text-align: center
+        font-size: 15px
+        color: $blue
+        font-weight: normal
+        padding: 1px 3px 1px
+        padding: 8px 4px
+        &.is_active
+            background-color: $pink
+            color: $white
+
+    tr
+        border-bottom: 1px solid #474F774D
+        &:first-of-type
+            th
+                background-color: $blue
+                color: $white
+
+        th
+            min-width: 64px
+            background-color: #F3F3F3
+
+        &:nth-of-type(even)
+            background-color: #F0F0F0
+            th
+                background-color: #D9D9D9
+
+    &__fade
+        color: #CCCCCC !important
+
+    &-description
+        padding: 0 15px
+        &__text
+            font-size: 14px
+            font-weight: 400
+            line-height: 16.59px
+            margin: 0 0 10px
+            position: relative
+            z-index: 1
+            padding: 2px 0 2px 32px
+
+        &__td
+            width: 28px
+            min-height: 20px
+            text-align: center
+            display: inline-block
+            padding: 2px 4px
+            background-color: #F0F0F0
+            position: absolute
+            left: 0
+            top: 0
+            &.is_active
+                background-color: $pink
+                color: $white
+
+            &.--fade
+                color: #CCCCCC
+
+.red
+    color: $red !important
+
+.loader
+    display: inline-block
+    margin: 0 10px
+    width: 32px
+    height: 8px
+    -webkit-mask: linear-gradient(90deg,$blue 70%,#0000 0) left/33.33% 100%
+    background: linear-gradient($blue 0 0) left 0% top 0 /30% 100% no-repeat #D9D9D9
+    animation: l7 .7s infinite steps(3)
+
+.bus__anim
+    width: 16px
+    height: 29px
+    background-image: url('../img/bus_anim.svg'), url('../img/arrow.gif')
+    background-repeat: no-repeat
+    background-position: top center, bottom center
+    background-size: contain, auto 11px
+
+@keyframes l7
+    100%
+        background-position: right -30% top 0

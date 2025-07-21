@@ -1,0 +1,81 @@
+.modal
+    display: none
+    position: fixed
+    top: 0
+    left: 0
+    width: 100%
+    z-index: 99999
+    padding-bottom: 50px
+    background-color: $white
+    height: 100vh
+    max-width: 900px
+    overflow-y: scroll
+    -ms-overflow-style: none
+    scrollbar-width: none
+    &::-webkit-scrollbar
+        display: none
+        width: 0
+        height: 0
+
+    @media screen and ( min-width: 650px )
+        left: 50%
+        transform: translateX(-50%)
+
+    &-online, &-update
+        padding: 10px 15px
+        background-color: $dark-green
+        text-align: center
+        color: $white
+        font-size: 14px
+        line-height: 15px
+        b, strong
+            font-weight: 500
+
+    &-update
+        background-color: $pink
+
+    &__back
+        position: absolute
+        left: 0
+        height: 68px
+        width: 42px
+        text-align: center
+        z-index: 1
+
+    &__num
+        font-size: 32px
+        margin-right: 8px
+        font-weight: 700
+
+    &-header
+        padding: 14px 10px 15px 42px
+        background-color: $blue
+        color: $white
+        display: flex
+        align-items: center
+        padding-left: 42px
+
+    &__heading
+        display: block
+        margin: 0
+        font-size: 16px
+        line-height: 17px
+
+    &__addres
+        font-size: 14px
+        line-height: 14px
+        display: block
+        margin: 8px 0 0
+        color: #F99746
+
+    &-map 
+        display: block
+        width: 100%
+        height: 100%
+        object-fit: cover
+
+    &-center 
+        height: 100%
+        display: flex
+        align-items: center
+        justify-content: center

@@ -1,0 +1,91 @@
+.legendtext .div-text {
+    display: inline;
+}
+
+.notime {
+    padding: 132px;
+    text-align: center;
+    display: block;
+}
+
+.legendtext {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+header.news h1{
+    padding: 15px;
+}
+
+header.news .title__heading {
+    font-size: 19px;
+    line-height: 30px;
+}
+header.news  .time__heading {
+    padding: 0px 15px 5px;
+    display: block;
+    color: #e5e5e5;
+    font-size: 13px;
+    background-color: var(--blue);
+}
+header.news .time__heading .all__heading {
+    float: right;
+}
+header.news .time__heading .all__heading a {
+     color: #e5e5e5;
+     text-decoration: underline;
+}
+main.news p {
+    line-height: 1.3;
+    color: #333;
+    font-size: 16px;
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+main.news ul {
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+}
+
+main.news li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+
+main.newsall {
+     padding: 0px; 
+    margin-bottom: 0px;
+}
+
+main.newsall a {
+       width: 100%;
+    min-height: 40px;
+    padding: 10px 10px;
+}
+
+main.newsall a .listing__text { font-size: 16px; }
+main.newsall a .listing__time { font-size: 14px;float: left;}
+
+main.newsall .listing-item { display: block; }
+
+.header-news .listing-item { display: block; }
+
+.header-news a {
+       width: 100%;
+    min-height: 30px;
+}
+
+.header-news a .listing__text { font-size: 15px; }
+.header-news a .listing__time { font-size: 13px;float: left;}
+
+.stops-section a { text-decoration: underline !important; }

@@ -1,0 +1,115 @@
+.header
+    width: 100%
+    margin: 0
+    background-color: $prime
+    &-info
+        justify-content: space-between
+        padding: 5px 10px 6px
+        &__weather,
+        &__time
+            color: $blue
+            font-size: 20px
+            line-height: 100%
+            img
+                width: 20px
+                display: inline-block
+                vertical-align: top
+
+        &__weather
+            font-size: 16px
+            line-height: 130%
+        
+
+.header-info,
+.navbar,
+.navbar-item,
+.logo
+    display: flex
+    align-items: stretch
+
+.logo
+    gap: 12px
+    align-items: center
+    box-shadow: 0px 1px 2px 0px #00000040
+    transform: none !important
+
+    &-title
+        font-weight: normal
+        margin: 0
+
+    &__heading
+        text-transform: uppercase
+        color: $blue
+        font-weight: 400
+        font-size: 13px
+        display: block
+        margin: 0 0 4px
+
+    &__text
+        font-weight: 700
+        letter-spacing: 0
+        font-size: 20px
+        color: $white
+        display: block
+        text-shadow: 1px 1px 1px #00000040
+
+.navbar
+    list-style: none
+    background-color: $blue
+    &-item
+        width: 100%
+        text-align: center
+        flex-direction: column
+        background-color: $blue
+        color: $white
+        padding-top: 7px
+        border-right: 1px solid #00000033
+        img
+            width: 21px
+            height: 26px
+            object-fit: contain
+            object-position: center center
+            display: block
+            margin: 0 auto 2px
+
+        &:hover,
+        &.is_active
+            opacity: 1
+            background-color: #474F77
+            box-shadow: 0px 0px 4px 0px #00000040 inset
+
+    &__text
+        font-size: 13px
+        margin: 0 auto 5px
+        padding: 0 2px
+
+    &__online
+        background-color: $pink
+        display: block
+        width: 100%
+        margin-top: auto
+        padding: 3px
+        font-size: 11px
+        line-height: 14px
+
+.nav
+    display: flex
+    align-items: center
+    text-align: center
+    width: 100%
+    background-color: $gray
+    &__item
+        cursor: pointer
+        width: 100%
+        font-size: 14px
+        line-height: 16.59px
+        font-weight: 400
+        padding: 9px 9px 8px
+        &.is_active
+            pointer-events: none
+            color: $white
+            background-color: $orange
+
+        a
+            display: block
+            color: inherit

@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /index.php
+Sitemap: https://arh-bus.ru/sitemap.xml
+
+Host: https://arh-bus.ru
