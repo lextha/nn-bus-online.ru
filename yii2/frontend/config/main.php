@@ -13,23 +13,23 @@ return [
     'language' => 'ru-RU',
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
-   // 'bootstrap' => ['log','debug'],
+    'bootstrap' => [],
     'controllerNamespace' => 'frontend\controllers',
     'modules' => [
-       /* 'debug' => [
+        /*'debug' => [
             'class' => 'yii\debug\Module',
-            'allowedIPs' => ['5.187.70.511']
+            'allowedIPs' => ['*']
         ],*/
         'sitemap' => [
             'class' => 'himiklab\sitemap\Sitemap',
             'models' => [
                 // your models
                // 'common\models\City',
-                'common\models\Route',
+                //'common\models\Route',
                 //'common\models\Station',
             ],
             'enableGzip' => false, // default is false
-            'cacheExpire' => 1, // 1 second. Default is 24 hours
+            'cacheExpire' => 78800, // 1 second. Default is 24 hours
         ]
     ],
     'components' => [
@@ -46,7 +46,7 @@ return [
             // this is the name of the session cookie used for login on the frontend
             'name' => 'advanced-frontend',
         ],
-        'log' => [
+     /*   'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
@@ -54,7 +54,7 @@ return [
                     'levels' => ['error', 'warning'],
                 ],
             ],
-        ],
+        ],*/
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
@@ -64,11 +64,11 @@ return [
             'showScriptName' => false,
             'rules' => [
                 ['class' => 'frontend\components\SlugUrlRule'],
-                [
-                    'pattern' => 'sitemap', 
+                /*[
+                    'pattern' => 'sitemap4245764_refresh', 
                     'route' => 'sitemap/default/index', 
                     'suffix' => '.xml'
-                ],
+                ],*/
                 '' => 'site/index',
                 '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
             ],

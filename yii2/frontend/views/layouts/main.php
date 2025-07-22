@@ -32,7 +32,7 @@ AppAsset::register($this);
         <div class="app">
             <?= $content ?>
             <footer class="footer">
-                <p class="footer-text">© arh-bus.ru</p>
+                <p class="footer-text">© nn-bus-online.ru</p>
                 <nav>
                     <noindex><!--googleoff: all-->
                         <div style='text-align: right;margin: 20px;color:#97989d;'>
@@ -47,23 +47,39 @@ AppAsset::register($this);
             </footer>
         </div>
         <?php $this->endBody() ?>
-       <!-- Yandex.Metrika counter -->
-<script type="text/javascript" >
-   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-   m[i].l=1*new Date();
-   for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+          <? if ((Yii::$app->controller->id == 'site') and (Yii::$app->controller->action->id == 'index'))  { } else {?>
+        <script async src="https://ad.mail.ru/static/ads-async.js"></script>
+<ins class="mrg-tag" 
+    data-ad-client="ad-1788329"
+    data-ad-slot="1788329">
+</ins>
+<script>(MRGtag = window.MRGtag || []).push({})</script>
+          <? } ?>
+        <!-- Yandex.Metrika counter -->
+        <script type="text/javascript" >
+            (function (m, e, t, r, i, k, a) {
+                m[i] = m[i] || function () {
+                    (m[i].a = m[i].a || []).push(arguments)
+                };
+                m[i].l = 1 * new Date();
+                for (var j = 0; j < document.scripts.length; j++) {
+                    if (document.scripts[j].src === r) {
+                        return;
+                    }
+                }
+                k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+            })
+                    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-   ym(97004382, "init", {
-        clickmap:true,
-        trackLinks:true,
-        accurateTrackBounce:true,
-        webvisor:true
-   });
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/97004382" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+            ym(96876837, "init", {
+                clickmap: true,
+                trackLinks: true,
+                accurateTrackBounce: true,
+                webvisor: true
+            });
+        </script>
+        <noscript><div><img src="https://mc.yandex.ru/watch/96876837" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+        <!-- /Yandex.Metrika counter -->
     </body>
 
 </html>

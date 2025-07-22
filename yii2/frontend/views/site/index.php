@@ -33,7 +33,7 @@ $this->registerLinkTag(['rel' => 'canonical', 'href' => Url::canonical()]);
     </a>
     <div class="header-info">
         <span class="header-info__time">
-            <img src="/img/time.svg" alt="time"> 
+            <img src="img/time.svg" alt="time"> 
         </span>
         <span class="header-info__weather">
 
@@ -82,7 +82,18 @@ $this->registerLinkTag(['rel' => 'canonical', 'href' => Url::canonical()]);
         <? } ?>
     </nav>
 </header>
-
+<div class="header2">
+<script async src="https://ad.mail.ru/static/ads-async.js"></script>
+<ins 
+    class="mrg-tag"
+    style="display:inline-block;width:auto;height:300px"
+    data-ad-client="ad-1817673"
+    data-ad-slot="1817673">
+</ins>
+<script>
+    (MRGtag = window.MRGtag || []).push({});
+</script>
+</div>
 <? if (count($routes[1]) > 0) { ?>
     <main class="listing route1">
         <? foreach ($routes[1] as $route) { ?>

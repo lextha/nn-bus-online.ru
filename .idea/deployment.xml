@@ -1,13 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="bus_dop" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
+  <component name="PublishConfigData" serverName="bus_dop_all" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
     <option name="confirmBeforeUploading" value="false" />
     <serverData>
       <paths name="bus_dop">
         <serverdata>
           <mappings>
-            <mapping deploy="/www/arh-bus.ru" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/www/nn-bus-online.ru" local="$PROJECT_DIR$" web="/" />
           </mappings>
+          <excludedPaths>
+            <excludedPath path="/www/nn-bus-online.ru/public_html/assets" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/backend" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/console/runtime" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/environments" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/frontend/assets" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/frontend/runtime" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/frontend/test" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/vagrant" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/vendor" />
+            <excludedPath local="true" path="$PROJECT_DIR$/.idea" />
+            <excludedPath local="true" path="$PROJECT_DIR$/public_html/assets" />
+            <excludedPath local="true" path="$PROJECT_DIR$/yii2/backend" />
+            <excludedPath local="true" path="$PROJECT_DIR$/yii2/console/runtime" />
+            <excludedPath local="true" path="$PROJECT_DIR$/yii2/environments" />
+            <excludedPath local="true" path="$PROJECT_DIR$/yii2/frontend/assets" />
+            <excludedPath local="true" path="$PROJECT_DIR$/yii2/frontend/runtime" />
+            <excludedPath local="true" path="$PROJECT_DIR$/yii2/vagrant" />
+            <excludedPath local="true" path="$PROJECT_DIR$/yii2/vendor" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/common/tests" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/frontend/tests" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+      <paths name="bus_dop_all">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/www/nn-bus-online.ru" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath path="/www/nn-bus-online.ru/public_html/assets" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/backend" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/console/runtime" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/environments" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/frontend/assets" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/frontend/runtime" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/frontend/test" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/vagrant" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/vendor" />
+            <excludedPath local="true" path="$PROJECT_DIR$/.idea" />
+            <excludedPath local="true" path="$PROJECT_DIR$/public_html/assets" />
+            <excludedPath local="true" path="$PROJECT_DIR$/yii2/backend" />
+            <excludedPath local="true" path="$PROJECT_DIR$/yii2/console/runtime" />
+            <excludedPath local="true" path="$PROJECT_DIR$/yii2/environments" />
+            <excludedPath local="true" path="$PROJECT_DIR$/yii2/frontend/assets" />
+            <excludedPath local="true" path="$PROJECT_DIR$/yii2/frontend/runtime" />
+            <excludedPath local="true" path="$PROJECT_DIR$/yii2/vagrant" />
+            <excludedPath local="true" path="$PROJECT_DIR$/yii2/vendor" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/common/tests" />
+            <excludedPath path="/www/nn-bus-online.ru/yii2/frontend/tests" />
+          </excludedPaths>
         </serverdata>
       </paths>
     </serverData>

@@ -2,8 +2,8 @@ php_flag display_errors off
 
 RewriteEngine on
 
-RewriteCond %{HTTP_HOST} ^www.arh-bus.ru$ [NC]
-RewriteRule ^(.*)$ https://arh-bus.ru/$1 [R=301,L]
+RewriteCond %{HTTP_HOST} ^www.nn-bus-online.ru$ [NC]
+RewriteRule ^(.*)$ https://nn-bus-online.ru/$1 [R=301,L]
 
 
 
@@ -397,4 +397,4 @@ RewriteRule ^ /%1 [R=301,L]
 #RewriteRule .* - [F]
 
 
-Redirect 301 /home https://arh-bus.ru
+Redirect 301 /home https://nn-bus-online.ru

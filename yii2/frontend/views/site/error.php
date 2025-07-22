@@ -16,7 +16,7 @@ $this->title = $name;
         <img src="/img/logo.svg" alt="logo">
         <h1 class="logo-title">
             <span class="logo__heading">Общественный транспорт</span>
-            <span class="logo__text">Архангельск</span>
+            <span class="logo__text">Нижний Новгород</span>
         </h1>
     </a>
     <div class="header-info">

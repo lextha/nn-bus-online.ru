@@ -89,3 +89,7 @@ main.newsall .listing-item { display: block; }
 .header-news a .listing__time { font-size: 13px;float: left;}
 
 .stops-section a { text-decoration: underline !important; }
+.header2 {
+    display: block;
+    margin: 10px auto;
+}

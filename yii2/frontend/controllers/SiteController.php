@@ -28,6 +28,7 @@ use common\models\Stationmany;
 use common\helpers\NameHelper;
 use common\models\News;
 use yii\helpers\Url;
+
 /**
  * Site controller
  */
@@ -137,13 +138,13 @@ class SiteController extends Controller {
         $city = City::findOne(['id' => $id]);
         date_default_timezone_set(Yii::$app->params['DateTimeZone']); // часовой пояс по городу
         $cache = Yii::$app->cache;
-        //  if ($_SERVER['REMOTE_ADDR']=='5.187.69.99') { var_dump(Yii::$app->user->isGuest); die(); }
+
         //$cache->flush();
-        $cache_return = $cache->get('city_' . $id);
-         $cache_return = false;
-        if (Yii::$app->user->can('admin') OR $_SERVER['REMOTE_ADDR'] == '127.0.0.1') {
-            $cache_return = false;
-        }
+        $cache_return = $cache->get('city_' . $id); // var_dump($cache_return); die('555'); 
+        // if (Yii::$app->user->can('admin') OR $_SERVER['REMOTE_ADDR'] == '5.187.71.181') {
+        $cache_return = false;
+        //     }
+        // var_dump($cache_return);
         if ($cache_return === false) {
             $routes = Route::find()->where("city_id=" . $city->id . " AND active=1 AND name<>'none' AND (version=1 OR version=4)")->orderBy('cast(number as unsigned), number')->all(); //AND (version=1 OR version=4)
             //var_dump($city->id);
@@ -160,9 +161,9 @@ class SiteController extends Controller {
                 } else {
                     $ttr = $r->type_transport;
                 }
-                
-                $r->name= NameHelper::replaceWordsInStringWsokrat($r->name);
-               // var_dump($r); die();
+
+                $r->name = NameHelper::replaceWordsInStringWsokrat($r->name);
+                // var_dump($r); die();
                 $routes_by_groups[$ttr][] = $r;
             }
 
@@ -172,13 +173,8 @@ class SiteController extends Controller {
                     $routes_no_work_by_groups[$r->type_direction][$r->type_transport][] = $r;
                 }
             }
-             if(class_exists('common\models\News')){
-                $news = News::find()->where("city_id=" . $city->id . " AND title2<>''")->orderBy('time DESC')->limit(2)->all();
-            } else {
-                $news=false;
-            }
+            $news = News::find()->where("city_id=" . $city->id . " AND title2<>''")->orderBy('time DESC')->limit(2)->all();
             $return = $this->render('index', ['city' => $city, 'routes' => $routes_by_groups, 'routes_no_work' => $routes_no_work_by_groups, 'dacha' => $route_dacha, "news" => $news]);
-            //   if (!Yii::$app->user->can('admin') AND $_SERVER['REMOTE_ADDR'] != '5.187.71.217') {
             //   if (!Yii::$app->user->can('admin') AND $_SERVER['REMOTE_ADDR'] != '5.187.71.217') {
             $cache->set('city_' . $id, $return, 200000);
             //    }
@@ -195,32 +191,32 @@ class SiteController extends Controller {
         $city = City::findOne(['id' => $city_id]);
         date_default_timezone_set(Yii::$app->params['DateTimeZone']); // часовой пояс по городу
         // var_dump($route); die();
-       /* if (isset($route->routeredirect->url) AND (!$route->active)) {
-            Yii::$app->response->redirect($route->routeredirect->url, 301)->send();
-            Yii::$app->end();
-            return;
-        }*/
+        /* if (isset($route->routeredirect->url) AND (!$route->active)) {
+          Yii::$app->response->redirect($route->routeredirect->url, 301)->send();
+          Yii::$app->end();
+          return;
+          } */
         if ($route->name == 'none') {
             throw new \yii\web\HttpException(404, 'Страница не найдена.');
         }
 
         $post = Yii::$app->request->get();
         $pjax_z = 0;
-     /*   if (isset($post['day_week']) AND !isset($post['_pjax'])) {
-            $url = explode("?", $_SERVER['REQUEST_URI']);
-            Yii::$app->response->redirect("https://" . $_SERVER['SERVER_NAME'] . $url[0], 301)->send();
-            Yii::$app->end();
-            return;
-        } elseif (isset($post['_pjax'])) {
-            $pjax_z = 1;
-        } else {
-            //if ($_SERVER['REMOTE_ADDR']=='5.187.70.145') {
-           // $route->setIncViews(); // инкримент кол-ва просмотров маршрута
-            // } 
-        }*/
+        /*   if (isset($post['day_week']) AND !isset($post['_pjax'])) {
+          $url = explode("?", $_SERVER['REQUEST_URI']);
+          Yii::$app->response->redirect("https://" . $_SERVER['SERVER_NAME'] . $url[0], 301)->send();
+          Yii::$app->end();
+          return;
+          } elseif (isset($post['_pjax'])) {
+          $pjax_z = 1;
+          } else {
+          //if ($_SERVER['REMOTE_ADDR']=='5.187.70.145') {
+          // $route->setIncViews(); // инкримент кол-ва просмотров маршрута
+          // }
+          } */
         //  die('fdfdf');
         $cache = Yii::$app->cache;
-         //$cache->flush();
+     //   $cache->flush();
 
 
         if ($day_week == 0) { // определяем текущий день недели, и выводим расписание для него. Если этого дня недели нет в расписании то ближайший день недели
@@ -246,7 +242,7 @@ class SiteController extends Controller {
         }
 
         $cache_return = $cache->get('route_' . $id . "_" . $day_week . "_" . $pjax_z);
-       // var_dump($cache_return); die();
+        // var_dump($cache_return); die();
         // if ($_SERVER['REMOTE_ADDR'] == '88.210.10.69') { echo 'route_' . $id . "_" . $day_week . "_" . $pjax_z;   var_dump($cache_return); die(); }
         if (Yii::$app->user->can('admin') OR $_SERVER['REMOTE_ADDR'] == '127.0.0.1') {
             $cache_return = false;
@@ -257,25 +253,25 @@ class SiteController extends Controller {
         //  if ($city->id=='9') { $cache_return=false;  }
         if ($cache_return === false) {
             if ($route->version == '1' OR $route->version == '4') {
-                $route['name']=NameHelper::replaceWordsInString($route['name']);
-                $similar = [];//Route::getRoutesSimilar($id, $city->id);
+                $route['name'] = NameHelper::replaceWordsInString($route['name']);
+                $similar = []; //Route::getRoutesSimilar($id, $city->id);
                 $stations = $route->getStations()->all();
-               // var_dump($stations); die();
-               foreach ($stations as $k=>$s) {
-                    $stations[$k]['name']=NameHelper::replaceWordsInString($stations[$k]['name']);
-               }
+                // var_dump($stations); die();
+                foreach ($stations as $k => $s) {
+                    $stations[$k]['name'] = NameHelper::replaceWordsInString($stations[$k]['name']);
+                }
                 $stationsall = $route->getStationRouteAll($id);
-                /*if (!$route->active) { // не активный NameHelper::replaceWordsInString(
-                    $pohozhii = Route::getRoutesSimilarone($route, $city->id);
-                } else {
-                    $pohozhii = null;
-                }*/
+                /* if (!$route->active) { // не активный NameHelper::replaceWordsInString(
+                  $pohozhii = Route::getRoutesSimilarone($route, $city->id);
+                  } else {
+                  $pohozhii = null;
+                  } */
                 //  if ($_SERVER['REMOTE_ADDR']=='5.187.69.40') {                echo "<pre>";    var_dump($stationsall);  }
                 foreach ($stationsall as $keyr => $st) {
                     if ($st) {
                         foreach ($st as $key => $st1) {
-                            
-                            $stationsall[$keyr][$key]['name']=NameHelper::replaceWordsInString($stationsall[$keyr][$key]['name']);
+
+                            $stationsall[$keyr][$key]['name'] = NameHelper::replaceWordsInString($stationsall[$keyr][$key]['name']);
                             $stationsall[$keyr][$key]['time_work'] = TimeWork::getTimeWork($st1['id_station_rout']);
                         }
                     }
@@ -295,12 +291,12 @@ class SiteController extends Controller {
                     $return = $this->render('route1', ['route' => $route, 'marsh' => $marsh, 'similar' => $similar, 'pohozhii' => $pohozhii, 'city' => $city, 'stations' => $stations, /* 'stations0'=>$stations0,'stations1'=>$stations1, */ 'stationsall' => $stationsall, 'day_week' => $day_week]);
                 }
             } elseif ($route->version == '2') { //Старые без карты
-                $similar = [];//Route::getRoutesSimilar2($id, $city->id);
+                $similar = []; //Route::getRoutesSimilar2($id, $city->id);
                 $marshrut = $route->getMarshrut();
                 $extra_fields = $route->getExtraFields();
                 $return = $this->render('route2', ['route' => $route, 'city' => $city, 'marshrut' => $marshrut, 'extra_fields' => $extra_fields, 'similar' => $similar]);
             } elseif ($route->version == '3') { //Новые без карты
-                $similar = [];//Route::getRoutesSimilar2($id, $city->id);
+                $similar = []; //Route::getRoutesSimilar2($id, $city->id);
                 $marshrut = $route->getMarshrut();
                 //   $extra_fields=$route->getExtraFields();
                 $return = $this->render('route3', ['route' => $route, 'city' => $city, 'marshrut' => $marshrut, 'similar' => $similar]);
@@ -322,8 +318,8 @@ class SiteController extends Controller {
             return $cache_return;
         }
     }
-    
-        public function actionNewslist($id) {
+
+    public function actionNewslist($id) {
         $news = News::find()->where("city_id=" . $id)->orderBy(['time' => SORT_DESC])->limit(25)->all();
         $city = City::find()->where("id=" . $id)->one();
         $return = $this->render('newslist', ['news' => $news, 'city' => $city]);
@@ -398,12 +394,26 @@ class SiteController extends Controller {
     }
 
     public function actionGettemp() {
-        date_default_timezone_set(Yii::$app->params['DateTimeZone']); // часовой пояс по городу
         $city_id = Yii::$app->params['city_id'];
         $city = City::findOne(['id' => $city_id]);
-        $temp = '+10';
-        $wether = file_get_contents('https://api.openweathermap.org/data/2.5/weather?q=' . $city->name . '&appid=6c8349feac5225ee1af114d071e44d69&units=metric');
-        $temp = json_decode($wether);
+        $temp = false;
+        $key = 'https://api.openweathermap.org/data/2.5/weather?q=' . $city->name . '&appid=6c8349feac5225ee1af114d071e44d69&units=metric';
+        $key = str_replace(" ", "%20", $key);
+        //  'https://api.openweathermap.org/data/2.5/weather?q=' . $city->name . '&appid=6c8349feac5225ee1af114d071e44d69&units=metric'
+        $wether = false;
+        while ($wether == false) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $key);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $wether = curl_exec($ch);
+            curl_close($ch);
+          //  var_dump($key, $wether);
+          //  die();
+            // $wether = file_get_contents($key); // 
+        }
+        if ($wether) {
+            $temp = json_decode($wether);
+        }
         //{"coord":{"lon":44.002,"lat":56.3287},"weather":[{"id":800,"main":"Clear","description":"clear sky","icon":"01n"}],"base":"stations","main":{"temp":-0.27,"feels_like":-5.25,"temp_min":-0.27,"temp_max":-0.23,"pressure":1023,"humidity":59},"visibility":10000,"wind":{"speed":5,"deg":210},"clouds":{"all":0},"dt":1710439579,"sys":{"type":2,"id":48933,"country":"RU","sunrise":1710386500,"sunset":1710428684},"timezone":10800,"id":520555,"name":"Nizhny Novgorod","cod":200}
         return $this->renderAjax('_temperatura', ['city' => $city,
                     'temp' => $temp,
@@ -457,7 +467,7 @@ class SiteController extends Controller {
 
     public function actionGetsxem($ri) {
 
-        $rl_racetype_to_my=['A'=>0,'B'=>1,'C'=>2,'D'=>3,'E'=>4,'F'=>5,'G'=>6];
+        $rl_racetype_to_my = ['A' => 0, 'B' => 1, 'C' => 2, 'D' => 3, 'E' => 4, 'F' => 5, 'G' => 6];
         $route_id = $ri;
         $post = Yii::$app->request->get();
         $buses = [];
@@ -490,46 +500,44 @@ class SiteController extends Controller {
                                     ->createCommand()->queryOne();
                     $m_id = $command['m_id'];
                 }
-             
+
                 if (isset($this->city_online_magic[$route->city_id])) {
                     $json = \console\helpers\FuncHelper::getunit_magic($route, $a->u_id, $this->city_online_magic[$route->city_id]);
                 } else {
                     $json = \console\helpers\FuncHelper::getunit_magic($route, $a->u_id, $this->city_online[$route->city_id]);
                 }
-             //   var_dump($json); die();
+                //   var_dump($json); die();
                 ///////////////////////
                 $buses[] = $json->result;
             }
         }
         $stations = Route::getStationRouteAll($ri);
-        
+
         foreach ($buses as $bb) {
             foreach ($bb as $key_b => $b) {
-                if (isset($stations[$rl_racetype_to_my[$b->rl_racetype]])) {
-                    foreach ($stations[$rl_racetype_to_my[$b->rl_racetype]] as $key_r => $r) {
-                        if ($r['temp_id'] == $b->st_id) {
-                            ////////////////// мнеяем время от -1 до +1 минуты
-                            $change = rand(0, 2);
-                            if ($change === 0) {
-                                $newTime = $b->ta_arrivetime;
-                            } elseif ($change === 1) {
-                                $newTime = date("H:i", strtotime($b->ta_arrivetime) + 60);
-                            } else {
-                                $newTime = date("H:i", strtotime($b->ta_arrivetime) - 60);
-                            }
-                            ////////////
-                            $stations[$rl_racetype_to_my[$b->rl_racetype]][$key_r]['time'] = $newTime;
-                            if ($key_b == 0) {
-                                $stations[$rl_racetype_to_my[$b->rl_racetype]][$key_r]['bus_arrive'] = true;
-                            } else {
-                                $stations[$rl_racetype_to_my[$b->rl_racetype]][$key_r]['bus_arrive'] = false;
-                            }
+                foreach ($stations[$rl_racetype_to_my[$b->rl_racetype]] as $key_r => $r) {
+                    if ($r['temp_id'] == $b->st_id) {
+                        ////////////////// мнеяем время от -1 до +1 минуты
+                        $change = rand(0, 2);
+                        if ($change === 0) {
+                            $newTime = $b->ta_arrivetime;
+                        } elseif ($change === 1) {
+                            $newTime = date("H:i", strtotime($b->ta_arrivetime) + 60);
+                        } else {
+                            $newTime = date("H:i", strtotime($b->ta_arrivetime) - 60);
+                        }
+                        ////////////
+                        $stations[$rl_racetype_to_my[$b->rl_racetype]][$key_r]['time'] = $newTime;
+                        if ($key_b == 0) {
+                            $stations[$rl_racetype_to_my[$b->rl_racetype]][$key_r]['bus_arrive'] = true;
+                        } else {
+                            $stations[$rl_racetype_to_my[$b->rl_racetype]][$key_r]['bus_arrive'] = false;
                         }
                     }
                 }
             }
         }
-        return $this->renderAjax('_routesxem', ['route' => $route,'stations'=>$stations]);
+        return $this->renderAjax('_routesxem', ['route' => $route, 'stations' => $stations]);
     }
 
     private function randfloat($num) {
@@ -543,7 +551,7 @@ class SiteController extends Controller {
         $formattedNum = $roundedNum + $deviation;
         return (string) $formattedNum;
     }
-    
+
     private function randfloat2($num) {
 
         $deviation = rand(-2, 2);
@@ -589,105 +597,105 @@ class SiteController extends Controller {
                 }
                 $lat = $this->randfloat($a->u_lat);
                 $long = $this->randfloat($a->u_long);
-                
-                $cours=$this->randfloat2($a->u_course);
-                
+
+                $cours = $this->randfloat2($a->u_course);
+
                 ///////////////////////
-                $marsh[] = [$lat, $long,$m_id,$cours];
+                $marsh[] = [$lat, $long, $m_id, $cours];
             }
         }
 
         return json_encode($marsh);
-        die();/*
-        $stationsall = $route->getStationRouteAll($route_id);
+        die(); /*
+          $stationsall = $route->getStationRouteAll($route_id);
 
-        if ($json && isset($json->result)) {
-            foreach ($json->result as $a) {
-                // var_dump($a); die();
-                $x0 = 1;
-                $y0 = 1;
-                $z0 = 1;
-                $pos_insert = 0;
-                $mqw = 1;
-                //var_dump($stationsall[0][0]['name'],$a->rl_firststation_title);echo "******";
-                if (($l0 AND count($l0) > 0) AND ($l1 AND count($l1) > 0)) {
-                    if ($stationsall[1][0]['name'] == $a->rl_firststation_title) {
-                        $mqw = 1;
-                    } else {
-                        $mqw = 0;
-                    }
-                } else {
-                    $mqw = 1;
-                    if ($l1 AND !$l0) {
-                        $l0 = $l1;
-                        $l1 = null;
-                    }
-                }
-                if ($l0) {
-                    foreach ($l0 as $k => $l) {
-                        $x00 = abs((float) $l[0] - (float) $a->u_lat);
-                        $y00 = abs((float) $l[1] - (float) $a->u_long);
-                        $z00 = $x00 + $y00;
-                        if ($z00 < $z0) { 
-                            $pos_insert = $k;
-                            $z0 = $z00;
-                        }
-                    }
-                }
-                // var_dump($pos_insert, count($l0));
-                if ($l1) {
-                    foreach ($l1 as $k => $l) {
-                        $x00 = abs((float) $l[0] - (float) $a->u_lat);
-                        $y00 = abs((float) $l[1] - (float) $a->u_long);
-                        $z00 = $x00 + $y00;
-                        if ($z00 < $z0) {
-                            $pos_insert = $k;
-                            $z0 = $z00;
-                        }
-                    }
-                }
+          if ($json && isset($json->result)) {
+          foreach ($json->result as $a) {
+          // var_dump($a); die();
+          $x0 = 1;
+          $y0 = 1;
+          $z0 = 1;
+          $pos_insert = 0;
+          $mqw = 1;
+          //var_dump($stationsall[0][0]['name'],$a->rl_firststation_title);echo "******";
+          if (($l0 AND count($l0) > 0) AND ($l1 AND count($l1) > 0)) {
+          if ($stationsall[1][0]['name'] == $a->rl_firststation_title) {
+          $mqw = 1;
+          } else {
+          $mqw = 0;
+          }
+          } else {
+          $mqw = 1;
+          if ($l1 AND !$l0) {
+          $l0 = $l1;
+          $l1 = null;
+          }
+          }
+          if ($l0) {
+          foreach ($l0 as $k => $l) {
+          $x00 = abs((float) $l[0] - (float) $a->u_lat);
+          $y00 = abs((float) $l[1] - (float) $a->u_long);
+          $z00 = $x00 + $y00;
+          if ($z00 < $z0) {
+          $pos_insert = $k;
+          $z0 = $z00;
+          }
+          }
+          }
+          // var_dump($pos_insert, count($l0));
+          if ($l1) {
+          foreach ($l1 as $k => $l) {
+          $x00 = abs((float) $l[0] - (float) $a->u_lat);
+          $y00 = abs((float) $l[1] - (float) $a->u_long);
+          $z00 = $x00 + $y00;
+          if ($z00 < $z0) {
+          $pos_insert = $k;
+          $z0 = $z00;
+          }
+          }
+          }
 
 
-                ///////////////////// смена id автобуса на свой
-                $m_id = 0;
-                $command = (new \yii\db\Query())
-                                ->from('idtoid')
-                                ->where(['u_id' => $a->u_id, 'route_id' => $route_id])
-                                ->createCommand()->queryOne();
-                if ($command) {
-                    $m_id = $command['m_id'];
-                } else {
-                    (new \yii\db\Query())->createCommand()->insert('idtoid', [
-                        'u_id' => $a->u_id,
-                        'route_id' => $route_id,
-                    ])->execute();
-                    $command = (new \yii\db\Query())
-                                    ->from('idtoid')
-                                    ->where(['u_id' => $a->u_id, 'route_id' => $route_id])
-                                    ->createCommand()->queryOne();
-                    $m_id = $command['m_id'];
-                }
-                ///////////////////////
-                if ($mqw == 0) {
-                    $l0 = array_merge(array_slice($l0, 0, $pos_insert, true),
-                            [array((float) $a->u_lat, (float) $a->u_long, 2, 0, $m_id)], // вместо 0 - $a->u_statenum
-                            array_slice($l0, $pos_insert, count($l0) - 1, true));
-                } elseif ($mqw == 1) {
-                    $l1 = array_merge(array_slice($l1, 0, $pos_insert, true),
-                            [array((float) $a->u_lat, (float) $a->u_long, 2, 0, $m_id)], // вместо 0 - $a->u_statenum
-                            array_slice($l1, $pos_insert, count($l1) - 1, true));
-                } else {
-                    echo 'error 5655';
-                }
-            }
-            $marsh[0] = $l0;
-            $marsh[1] = $l1;
-            //  echo "<pre>";var_dump($marsh); die();
-            /////////////////////////////
-            echo json_encode($marsh);
-            //  $return = $this->renderAjax('_mapnew', ['route_line' => $route_line, 'marsh' => $marsh, 'stationsall' => $stationsall, 'city' => $city]);
-        }
-        die('error487515');*/
+          ///////////////////// смена id автобуса на свой
+          $m_id = 0;
+          $command = (new \yii\db\Query())
+          ->from('idtoid')
+          ->where(['u_id' => $a->u_id, 'route_id' => $route_id])
+          ->createCommand()->queryOne();
+          if ($command) {
+          $m_id = $command['m_id'];
+          } else {
+          (new \yii\db\Query())->createCommand()->insert('idtoid', [
+          'u_id' => $a->u_id,
+          'route_id' => $route_id,
+          ])->execute();
+          $command = (new \yii\db\Query())
+          ->from('idtoid')
+          ->where(['u_id' => $a->u_id, 'route_id' => $route_id])
+          ->createCommand()->queryOne();
+          $m_id = $command['m_id'];
+          }
+          ///////////////////////
+          if ($mqw == 0) {
+          $l0 = array_merge(array_slice($l0, 0, $pos_insert, true),
+          [array((float) $a->u_lat, (float) $a->u_long, 2, 0, $m_id)], // вместо 0 - $a->u_statenum
+          array_slice($l0, $pos_insert, count($l0) - 1, true));
+          } elseif ($mqw == 1) {
+          $l1 = array_merge(array_slice($l1, 0, $pos_insert, true),
+          [array((float) $a->u_lat, (float) $a->u_long, 2, 0, $m_id)], // вместо 0 - $a->u_statenum
+          array_slice($l1, $pos_insert, count($l1) - 1, true));
+          } else {
+          echo 'error 5655';
+          }
+          }
+          $marsh[0] = $l0;
+          $marsh[1] = $l1;
+          //  echo "<pre>";var_dump($marsh); die();
+          /////////////////////////////
+          echo json_encode($marsh);
+          //  $return = $this->renderAjax('_mapnew', ['route_line' => $route_line, 'marsh' => $marsh, 'stationsall' => $stationsall, 'city' => $city]);
+          }
+          die('error487515'); */
     }
 
     public function actionGetmaponline($ri) {
@@ -697,7 +705,7 @@ class SiteController extends Controller {
 
         $route = Route::find()->where(['id' => $route_id])->one();
         $stationsall = $route->getStationRouteAll($route_id);
-   
+
         $city = City::find()->where(['id' => $route->city_id])->one();
 
         $route_line = Route::getMaproute($route->id);
@@ -769,9 +777,6 @@ class SiteController extends Controller {
             }
         }
         //    var_dump($l0,$l1); die();
-
- 
-   
         //  array_multisort(array_column($l0, '0'), SORT_ASC, array_column($l0, '1'), SORT_ASC, $l0);
         //  array_multisort(array_column($l1, '0'), SORT_ASC, array_column($l1, '1'), SORT_ASC, $l1);
         $marsh[0] = $l0;
@@ -783,820 +788,821 @@ class SiteController extends Controller {
 
         return $return;
     }
-/*
-    public function actionRoutemap($id, $route, $city) {
-
-        return $this->render('routemap', ['route' => $route, 'city' => $city]);
-    }
-
-    public function actionGetmarsh($id) {
-        $post = Yii::$app->request->get();
-        $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
-        $recaptcha_secret = '6LcL0rQcAAAAAHoOixrHODf_D-JGLDDT-Sme42M_';
-        $recaptcha_response = $post['capfs'];
-
-        // Отправляем POST запрос и декодируем результаты ответа
-        $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response);
-        $recaptcha = json_decode($recaptcha);
-        //  if ($_SERVER['REMOTE_ADDR']=='5.187.71.68') { var_dump($recaptcha->score);  die(); }
-        if ((isset($recaptcha->score) AND $recaptcha->score >= 0.5) OR (Yii::$app->user->can('admin')) OR ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')) {
-            $route = Route::find()->where(['id' => $id])->one();
-            $marshrut = $route->getMarshrut();
-            $return = $this->renderAjax('_route3marsh', ['marshrut' => $marshrut]);
-            return $return;
-        } else {
-            throw new \yii\web\HttpException(403, 'Нет доступа.');
-        }
-    }
-
-    public function actionGetrasp($route_id) {
-        //die('dfg');
-        $post = Yii::$app->request->get();
-        $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
-        $recaptcha_secret = '6LcL0rQcAAAAAHoOixrHODf_D-JGLDDT-Sme42M_';
-        $recaptcha_response = $post['capfs'];
-
-        // Отправляем POST запрос и декодируем результаты ответа
-        $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response);
-        //  if ($_SERVER['REMOTE_ADDR']=='5.187.71.206') { var_dump($recaptcha);  die(); }
-        $recaptcha = json_decode($recaptcha);
-
-        if ((isset($recaptcha->score) AND $recaptcha->score >= 0.5) OR (Yii::$app->user->can('admin')) OR ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')) {
-            $route = Route::find()->where(['id' => $route_id])->one();
-            if ($route->version == 2) {
-                $extra_fields = $route->getExtraFields();
-                $tw = $extra_fields[5]->value;
-                //  var_dump($tw);
-            } else {
-                $tw = $route->time_work;
-            }
-            //var_dump($route); die();
-            return $this->renderAjax('_getrasp', ['time_work' => $tw]);
-        } else {
-            throw new \yii\web\HttpException(403, 'Нет доступа.');
-        }
-    }
-
-    public function actionGetsearch($number, $text, $city_id) {
-        // var_dump($city_id); die();
-        $routes = City::getSearch($number, $text, $city_id);
-        return $this->renderAjax('_search', ['routes' => $routes]);
-    }
-
-    public function actionGetsearchindex($text) {
-        // var_dump($city_id); die();
-        $cities = City::getSearchcities($text);
-        return $this->renderAjax('_searchindex', ['cities' => $cities]);
-    }
-
-    public function actionGetmodal($rel, $route_id) {
-        return $this->renderAjax('_getmodal', ['rel' => $rel, 'route_id' => $route_id]);
-    }
-
-    public function actionSendinfo() {
-        $post = Yii::$app->request->post();
-        // var_dump($post);
-        if (Route::setRoutemessage($post['route_id'], $post['errortext'])) {
-
-      
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function actionGetmap($route_id) {
-        $post = Yii::$app->request->get();
-        $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
-        $recaptcha_secret = '6LcL0rQcAAAAAHoOixrHODf_D-JGLDDT-Sme42M_';
-        $recaptcha_response = $post['capfs'];
-
-        // Отправляем POST запрос и декодируем результаты ответа
-        $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response);
-        $recaptcha = json_decode($recaptcha);
-        //if ($_SERVER['REMOTE_ADDR']=='23.129.64.202') { var_dump($recaptcha->score);  die(); }
-
-        if ((isset($recaptcha->score) AND $recaptcha->score >= 0.5) OR (Yii::$app->user->can('admin')) OR ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')) {
-            $cache = Yii::$app->cache;
-            // $cache->flush();
-            //$cache->delete('map1'.$route_id);
-            $cache_return = $cache->get('map1' . $route_id);
-            // if ($_SERVER['REMOTE_ADDR']=='5.187.69.40') { $cache_return=false; }
-            // $cache_return->flushValues();
-            if ($cache_return === false) {
-                $route = Route::find()->where(['id' => $route_id])->one();
-                //$s=Route::getStationRouteOne($station_rout_id);
-       
-
-                $stationsall = $route->getStationRouteAll($route_id);
-                if (count($stationsall) < 3) {
-                    $stations0 = ($stationsall[0]) ? $stationsall[0] : false; //$route->getStationRoute0($id);
-                    $stations1 = ($stationsall[1]) ? $stationsall[1] : false; //$route->getStationRoute1($id);
-                } else {
-                    $stations0 = false;
-                    $stations1 = false;
-                }
-
-                $route_line = Route::getMaproute($route_id);
-                $city = City::find()->where(['id' => $route->city_id])->one();
-                $return = $this->renderAjax('_map', ['route_line' => $route_line, 'stations0' => $stations0, 'stations1' => $stations1, 'stationsall' => $stationsall, 'city' => $city]);
-                $cache->set('map1' . $route_id, $return, 1200000);
-                return $return;
-            } else {
-                return $cache_return;
-            }
-        } else {
-            throw new \yii\web\HttpException(403, 'Нет доступа.');
-        }
-    }
-
-    public function actionGetrouteonline($route_id) {
-        $post = Yii::$app->request->get();
-        $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
-        $recaptcha_secret = '6LcL0rQcAAAAAHoOixrHODf_D-JGLDDT-Sme42M_';
-        $recaptcha_response = $post['capfs'];
-        // Отправляем POST запрос и декодируем результаты ответа
-        $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response);
-        $recaptcha = json_decode($recaptcha);
-        // if ($_SERVER['REMOTE_ADDR']=='23.129.64.202') { var_dump($recaptcha->score);  die(); }
-        if ((isset($recaptcha->score) AND $recaptcha->score >= 0.5) OR (Yii::$app->user->can('admin')) OR ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')) {
-            $count_online = -1;
-            $route = Route::findOne(['id' => $route_id]);
-            $city = City::findOne(['id' => $route->city_id]);
-            //   var_dump($route_id);
-            $stationsall = $route->getStationRouteAll($route_id);
-            foreach ($stationsall as $keyr => $st) {
-                if ($st) {
-                    foreach ($st as $key => $st1) {
-                        $stationsall[$keyr][$key]['time_work'] = TimeWork::getTimeWork($st1['id_station_rout']);
-                    }
-                }
-            }
-            $marsh = [];
-            //   use console\helpers\FuncHelper;
-            // var_dump($city_online[$route->city_id]);
-            $json = false;
-            if (isset($this->city_online_magic[$route->city_id])) {
-                $json = \console\helpers\FuncHelper::getpos_magic($route, $this->city_online_magic[$route->city_id]);
-            } elseif (isset($this->city_online[$route->city_id])) {
-                $json = \console\helpers\FuncHelper::getpos($route, $this->city_online[$route->city_id]);
-            }
-            if ($json) {
-                $route_line = Route::getMaproute($route->id);
-                $l1 = json_decode($route_line[1]['line']);  /// попутаны маршрут на карте и последовательность остановок
-                $l0 = json_decode($route_line[0]['line']);
-
-                if (!$l1) {
-                    $l1 = [];
-                }
-                if (!$l0) {
-                    $l0 = [];
-                }
-                foreach ($l0 as $k => $l) {
-                    $l0[$k][] = 0;
-                }
-                foreach ($l1 as $k => $l) {
-                    $l1[$k][] = 0;
-                }
-                if ($stationsall[0]) {
-                    foreach ($stationsall[0] as $se) { // остановки встраиваем в маршрут
-                        $x0 = 1;
-                        $y0 = 1;
-                        $z0 = 1;
-                        $pos_insert = 0;
-                        foreach ($l0 as $k => $l) {
-                            $x00 = abs((float) $l[0] - (float) $se['y']);
-                            $y00 = abs((float) $l[1] - (float) $se['x']);
-                            $z00 = $x00 + $y00;
-                            if ($z00 < $z0) {
-                                $pos_insert = $k;
-                                $z0 = $z00;
-                            }
-                        }
-
-                        $l0 = array_merge(array_slice($l0, 0, $pos_insert),
-                                [array((float) $se['y'], (float) $se['x'], 1, $se)],
-                                array_slice($l0, $pos_insert, count($l0) - 1));
-                    }
-                }
-                if ($stationsall[1]) {
-                    foreach ($stationsall[1] as $se) { // остановки встраиваем в маршрут
-                        //  var_dump($se);
-                        $x0 = 1;
-                        $y0 = 1;
-                        $z0 = 1;
-                        $pos_insert = 0;
-                        foreach ($l1 as $k => $l) {
-                            $x00 = abs((float) $l[0] - (float) $se['y']);
-                            $y00 = abs((float) $l[1] - (float) $se['x']);
-                            $z00 = $x00 + $y00;
-                            if ($z00 < $z0) {
-                                $pos_insert = $k;
-                                $z0 = $z00;
-                            }
-                        }
-                        $l1 = array_merge(array_slice($l1, 0, $pos_insert, true),
-                                [array((float) $se['y'], (float) $se['x'], 1, $se)],
-                                array_slice($l1, $pos_insert, count($l1) - 1, true));
-                    }
-                }
-                //    var_dump($json->result); die();
-                if (isset($json->result) && is_array($json->result)) {
-                    $count_online = count($json->result);
-                    foreach ($json->result as $a) {
-                        // var_dump($a); die();
-                        $x0 = 1;
-                        $y0 = 1;
-                        $z0 = 1;
-                        $pos_insert = 0;
-                        $mqw = 0;
-                        if ($stationsall[1][0]['name'] == $a->rl_firststation_title) {
-                            $mqw = 1;
-                        } else {
-                            $mqw = 0;
-                        }
-
-                        if (count($l0) > 0 AND count($l1) == 0) {
-                            $mqw = 0;
-                        }
-                        if ($mqw == 0) {
-                            foreach ($l0 as $k => $l) {
-                                $x00 = abs((float) $l[0] - (float) $a->u_lat);
-                                $y00 = abs((float) $l[1] - (float) $a->u_long);
-                                $z00 = $x00 + $y00;
-                                if ($z00 < $z0) {
-                                    $pos_insert = $k;
-                                    $z0 = $z00;
-                                }
-                            }
-                            if ($z0 < 0.001) {
-                                $l0 = array_merge(array_slice($l0, 0, $pos_insert, true),
-                                        [array((float) $a->u_lat, (float) $a->u_long, 2, $a->u_statenum)],
-                                        array_slice($l0, $pos_insert, count($l0) - 1, true));
-                            }
-                        } elseif ($mqw == 1) {
-                            foreach ($l1 as $k => $l) {
-                                $x00 = abs((float) $l[0] - (float) $a->u_lat);
-                                $y00 = abs((float) $l[1] - (float) $a->u_long);
-                                $z00 = $x00 + $y00;
-                                if ($z00 < $z0) {
-                                    $pos_insert = $k;
-                                    $z0 = $z00;
-                                }
-                            }
-                            if ($z0 < 0.001) {
-                                $l1 = array_merge(array_slice($l1, 0, $pos_insert, true),
-                                        [array((float) $a->u_lat, (float) $a->u_long, 2, $a->u_statenum)],
-                                        array_slice($l1, $pos_insert, count($l1) - 1, true));
-                            }
-                        } else {
-                            echo 'error 5655';
-                        }
-                    }
-                } else {
-                    $count_online = 0;
-                }
-                foreach ($l0 as $kkk => $l) {
-                    if ($l[2] == 0) {
-                        unset($l0[$kkk]);
-                    }
-                    if (($l[2] == 1)) {
-                        $l0[$kkk][3] = $l0[$kkk][3]['id_station_rout'];
-                    }
-                }
-                foreach ($l1 as $kkk => $l) {
-                    if ($l[2] == 0) {
-                        unset($l1[$kkk]);
-                    }
-                    if (($l[2] == 1)) {
-                        $l1[$kkk][3] = $l1[$kkk][3]['id_station_rout'];
-                    }
-                }//echo "<pre>"; var_dump($stationsall); die();  
-                if (count($l0) > 1) {
-                    $stationsall[0] = array_values($l0);
-                }
-                if (count($l1) > 1) {
-                    $stationsall[1] = array_values($l1);
-                }
-                echo json_encode(array_values($stationsall));
-                die();
-            }
-            //  $return=$this->render('_getonline',['route'=>$route,'marsh'=>$marsh,'similar'=>$similar,'city'=>$city,'stations'=>$stations,'stationsall'=>$stationsall,'day_week' => $day_week,'count_online'=>$count_online]);
-        }
-        die('false');
-    }
-
-    public function actionGetmap2($route_id) {
-        $post = Yii::$app->request->get();
-        $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
-        $recaptcha_secret = '6LcL0rQcAAAAAHoOixrHODf_D-JGLDDT-Sme42M_';
-        $recaptcha_response = $post['capfs'];
-
-        // Отправляем POST запрос и декодируем результаты ответа
-        $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response);
-        $recaptcha = json_decode($recaptcha);
-        // if ($_SERVER['REMOTE_ADDR']=='23.129.64.202') { var_dump($recaptcha->score);  die(); }
-        if ((isset($recaptcha->score) AND $recaptcha->score >= 0.5) OR (Yii::$app->user->can('admin')) OR ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')) {
-            $cache = Yii::$app->cache;
-
-            //$cache->flush();
-            //$cache->delete('map'.$route_id);
-            $cache_return = $cache->get('map' . $route_id);
-            $cache_return = false; ////////////////////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            // $cache_return->flushValues();
-            if ($cache_return === false) {
-                $route = Route::find()->where(['id' => $route_id])->one();
-                $stationsall = $route->getStationRouteAll($route_id);
-                if (count($stationsall) < 3) {
-                    $stations0 = ($stationsall[0]) ? $stationsall[0] : false; //$route->getStationRoute0($id);
-                    $stations1 = ($stationsall[1]) ? $stationsall[1] : false; //$route->getStationRoute1($id);
-                } else {
-                    $stations0 = false;
-                    $stations1 = false;
-                }
-
-                // $route_line=Route::getMaproute($route_id);
-                $city = City::find()->where(['id' => $route->city_id])->one();
-
-                /////////////////////////////
-                if (isset($this->city_online_magic[$route->city_id])) {
-                    $json = \console\helpers\FuncHelper::getpos_magic($route, $this->city_online_magic[$route->city_id]);
-                } else {
-                    $json = \console\helpers\FuncHelper::getpos($route, $this->city_online[$route->city_id]);
-                }
-                $route_line = Route::getMaproute($route->id);
-                $l0 = [];
-                $l1 = [];
-                $l0 = json_decode($route_line[0]['line']);
-                $l1 = json_decode($route_line[1]['line']);
-
-                if ($l0 && count($l0) > 0) {
-                    foreach ($l0 as $k => $l) {
-                        $l0[$k][] = 0;
-                    }
-                }
-                if ($l1 && count($l1) > 0) {
-                    foreach ($l1 as $k => $l) {
-                        $l1[$k][] = 0;
-                    }
-                }
-
-
-                if ($stationsall[0]) {
-                    foreach ($stationsall[0] as $se) { // остановки встраиваем в маршрут
-                        $x0 = 1;
-                        $y0 = 1;
-                        $z0 = 1;
-                        $pos_insert = 0;
-                        foreach ($l0 as $k => $l) {
-                            $x00 = abs((float) $l[0] - (float) $se['y']);
-                            $y00 = abs((float) $l[1] - (float) $se['x']);
-                            $z00 = $x00 + $y00;
-                            //if ($x00<$x0 AND $y00<$y0 AND $x00<0.01 AND $y00<0.01) { $pos_insert=$k; $x0=$x00; $y0=$y00;    }
-                            if ($z00 < $z0) {
-                                $pos_insert = $k;
-                                $z0 = $z00;
-                            }
-                        }
-
-                        //  var_dump($pos_insert,$x0,$y0); 
-                        // echo "<pre>";
-                        if ($z0 < 0.005) {
-                            $l0 = array_merge(array_slice($l0, 0, $pos_insert),
-                                    [array((float) $se['y'], (float) $se['x'], 1, $se['name'], $se['id'])],
-                                    array_slice($l0, $pos_insert, count($l0) - 1));
-                        }
-                        //  var_dump($l0);  die();
-                    }
-                }
-                if ($stationsall[1]) {
-                    foreach ($stationsall[1] as $se) { // остановки встраиваем в маршрут
-                        $x0 = 1;
-                        $y0 = 1;
-                        $z0 = 1;
-                        $pos_insert = 0;
-                        foreach ($l1 as $k => $l) {
-                            $x00 = abs((float) $l[0] - (float) $se['y']);
-                            $y00 = abs((float) $l[1] - (float) $se['x']);
-                            $z00 = $x00 + $y00;
-                            // if ($x00<$x0 AND $y00<$y0 AND $x00<0.01 AND $y00<0.01) { $pos_insert=$k; $x0=$x00; $y0=$y00; }
-                            if ($z00 < $z0) {
-                                $pos_insert = $k;
-                                $z0 = $z00;
-                            }
-                        }
-                        if ($z0 < 0.005) {
-                            $l1 = array_merge(array_slice($l1, 0, $pos_insert, true),
-                                    [array((float) $se['y'], (float) $se['x'], 1, $se['name'], $se['id'])],
-                                    array_slice($l1, $pos_insert, count($l1) - 1, true));
-                        }
-                    }
-                }
-                //    var_dump($l0,$l1); die();
-                if ($json && isset($json->result)) {
-                    foreach ($json->result as $a) {
-                        // var_dump($a); die();
-                        $x0 = 1;
-                        $y0 = 1;
-                        $z0 = 1;
-                        $pos_insert = 0;
-                        $mqw = 1;
-                        //var_dump($stationsall[0][0]['name'],$a->rl_firststation_title);echo "******";
-                        if (($l0 AND count($l0) > 0) AND ($l1 AND count($l1) > 0)) {
-                            if ($stationsall[1][0]['name'] == $a->rl_firststation_title) {
-                                $mqw = 1;
-                            } else {
-                                $mqw = 0;
-                            }
-                        } else {
-                            $mqw = 1;
-                            if ($l1 AND !$l0) {
-                                $l0 = $l1;
-                                $l1 = null;
-                            }
-                        }
-                        if ($l0) {
-                            foreach ($l0 as $k => $l) {
-                                $x00 = abs((float) $l[0] - (float) $a->u_lat);
-                                $y00 = abs((float) $l[1] - (float) $a->u_long);
-                                $z00 = $x00 + $y00;
-                                if ($z00 < $z0) { 
-                                    $pos_insert = $k;
-                                    $z0 = $z00;
-                                }
-                            }
-                        }
-                        // var_dump($pos_insert, count($l0));
-                        if ($l1) {
-                            foreach ($l1 as $k => $l) {
-                                $x00 = abs((float) $l[0] - (float) $a->u_lat);
-                                $y00 = abs((float) $l[1] - (float) $a->u_long);
-                                $z00 = $x00 + $y00;
-                                if ($z00 < $z0) {
-                                    $pos_insert = $k;
-                                    $z0 = $z00;
-                                }
-                            }
-                        }
-
-
-                        ///////////////////// смена id автобуса на свой
-                        $m_id = 0;
-                        $command = (new \yii\db\Query())
-                                        ->from('idtoid')
-                                        ->where(['u_id' => $a->u_id, 'route_id' => $route_id])
-                                        ->createCommand()->queryOne();
-                        if ($command) {
-                            $m_id = $command['m_id'];
-                        } else {
-                            (new \yii\db\Query())->createCommand()->insert('idtoid', [
-                                'u_id' => $a->u_id,
-                                'route_id' => $route_id,
-                            ])->execute();
-                            $command = (new \yii\db\Query())
-                                            ->from('idtoid')
-                                            ->where(['u_id' => $a->u_id, 'route_id' => $route_id])
-                                            ->createCommand()->queryOne();
-                            $m_id = $command['m_id'];
-                        }
-                        ///////////////////////
-                        if ($mqw == 0) {
-                            $l0 = array_merge(array_slice($l0, 0, $pos_insert, true),
-                                    [array((float) $a->u_lat, (float) $a->u_long, 2, 0, $m_id)], // вместо 0 - $a->u_statenum
-                                    array_slice($l0, $pos_insert, count($l0) - 1, true));
-                        } elseif ($mqw == 1) {
-                            $l1 = array_merge(array_slice($l1, 0, $pos_insert, true),
-                                    [array((float) $a->u_lat, (float) $a->u_long, 2, 0, $m_id)], // вместо 0 - $a->u_statenum
-                                    array_slice($l1, $pos_insert, count($l1) - 1, true));
-                        } else {
-                            echo 'error 5655';
-                        }
-                    }
-                }
-              
-           
-                //  array_multisort(array_column($l0, '0'), SORT_ASC, array_column($l0, '1'), SORT_ASC, $l0);
-                //  array_multisort(array_column($l1, '0'), SORT_ASC, array_column($l1, '1'), SORT_ASC, $l1);
-                $marsh[0] = $l0;
-                $marsh[1] = $l1;
-                //  echo "<pre>";var_dump($marsh); die();
-                /////////////////////////////
-
-                $return = $this->renderAjax('_mapnew', ['route_line' => $route_line, 'marsh' => $marsh, 'stationsall' => $stationsall, 'city' => $city]);
-                $cache->set('map' . $route_id, $return, 1200000);
-                return $return;
-            } else {
-                return $cache_return;
-            }
-        } else {
-            throw new \yii\web\HttpException(403, 'Нет доступа.');
-        }
-    }
-
-    public function actionGetmaps($station_id) {
-        $cache = Yii::$app->cache;
-        // $cache->flush();
-        $cache_return = $cache->get('map_st3_' . $station_id);
-        //$cache_return = false;
-        if ($cache_return === false) {
-            $stationmany = Stationmany::find()->where(['id' => $station_id])->one();
-            $station = [];
-            if ($stationmany) {
-                foreach ($stationmany->stations as $st) {
-                    $station[] = Station::find()->where(['id' => $st->id])->one();
-                }
-                $city_id = $stationmany->city_id;
-            } else {
-                $station[] = Station::find()->where(['id' => $station_id])->one();
-                $city_id = $station[0]->city_id;
-            }
-            $city = City::find()->where(['id' => $city_id])->one();
-            $return = $this->renderAjax('_mapst', ['stations' => $station, 'city' => $city]);
-            $cache->set('map_st3_' . $station_id, $return, 1200000);
-            return $return;
-        } else {
-            return $cache_return;
-        }
-    }
-
-    public function actionGetost($route_id, $ostan_ishod) {
-        $s = Route::getStationRouteOld($route_id, $ostan_ishod);
-       
-        return $this->renderAjax('_getost', ['s' => $s]);
-    }
-
-    public function actionStationmany($id, $station = false, $city = false, $day_week = 0) {
-        //  die('dssd');
-        if ($station == false OR $city == false) {
-            throw new \yii\web\HttpException(404, 'Не найдена');
-        }
-        // var_dump($day_week); die();
-        //var_dump($station->stations); die();
-
-        $pjax_z = 0;
-        $post = Yii::$app->request->get();
-        if (isset($post['day_week']) AND !isset($post['_pjax'])) {
-            $url = explode("?", $_SERVER['REQUEST_URI']);
-            Yii::$app->response->redirect("https://" . $_SERVER['SERVER_NAME'] . $url[0], 301)->send();
-            Yii::$app->end();
-            return;
-        } elseif (isset($post['_pjax'])) {
-            $pjax_z = 1;
-        }
-
-        if ($day_week == 0) { // определяем текущий день недели, и выводим расписание для него. Если этого дня недели нет в расписании то ближайший день недели
-            $day_week = date('w');
-        }
-
-        $cache = Yii::$app->cache;
-        // $cache->flush();
-        $cache_return = $cache->get('stationmany2_' . $station->id . "_" . $day_week . "_" . $pjax_z);
-        if ($_SERVER['REMOTE_ADDR'] == '5.187.71.244') {
-            //var_dump('station_'.$station->id."_".$day_week."_".$pjax_z,$cache_return); die('453');
-            $cache_return = false;
-        }
-
-        if ($cache_return === false) {
-
-            $all_stations = $station->stations;
-            $routes = [0 => [], 1 => [], 2 => [], 3 => [], 4 => [], 5 => []];
-            foreach ($all_stations as $st) {
-                $r = Station::getRoutesByStation($st->id);
-
-                for ($ie = 1; $ie <= 5; $ie++) {
-                    if (isset($r[$ie])) {
-                        $routes[$ie] = $routes[$ie] + $r[$ie]; //array_merge($routes[$ie],$r[$ie]);
-                    }
-                }
-            }
-
-            $return = $this->render('stationmany', ['station' => $station, 'city' => $city, 'routes' => $routes, 'day_week' => $day_week]);
-            $cache->set('stationmany2_' . $station->id . "_" . $day_week . "_" . $pjax_z, $return, 600000);
-        } else {
-            $return = $cache_return;
-        }
-        return $return;
-    }
-
-    public function actionStation($id, $station, $city, $day_week = 0) {
-        if ($day_week == '999') {
-            die();
-            $array_st = [];
-            $stations = Station::find()->where("id>64999 AND id<85000 AND inmany=0")->all();
-            foreach ($stations as $s) {
-                if (!in_array($s->id, $array_st)) {
-                    $s->name = str_replace("'", "\'", $s->name);
-                    $station_all = Station::find()->where("name='" . $s->name . "' AND city_id='" . $s->city_id . "' AND inmany=0")->all();
-                    $stationmany = new Stationmany;
-                    $stationmany->name = $s->name;
-                    $stationmany->alias = $s->alias;
-                    $stationmany->city_id = $s->city_id;
-                    $stationmany->save();
-                    $stationmany->refresh();
-                    foreach ($station_all as $value) {
-                        (new \yii\db\Query())->createCommand()->insert('stationmany_station', [
-                            'stationmany_id' => $stationmany->id,
-                            'station_id' => $value->id,
-                        ])->execute();
-                        $value->inmany = 1;
-                        $value->save();
-                        $array_st[] = $value->id; // записываем уже обработаные остановки
-                    }
-                }
-            }
-            die('123');
-        }
-
-
-       
-       
-
-/////////////////
-
-        $pjax_z = 0;
-        $post = Yii::$app->request->get();
-        if (isset($post['day_week']) AND !isset($post['_pjax'])) {
-            $url = explode("?", $_SERVER['REQUEST_URI']);
-            Yii::$app->response->redirect("https://" . $_SERVER['SERVER_NAME'] . $url[0], 301)->send();
-            Yii::$app->end();
-            return;
-        } elseif (isset($post['_pjax'])) {
-            $pjax_z = 1;
-        }
-
-        if ($day_week == 0) { // определяем текущий день недели, и выводим расписание для него. Если этого дня недели нет в расписании то ближайший день недели
-            $day_week = date('w');
-        }
-
-        $cache = Yii::$app->cache;
-        // $cache->flush();
-        $cache_return = $cache->get('station_' . $station->id . "_" . $day_week . "_" . $pjax_z);
-
-        if ($cache_return === false) {
-            $routes = Station::getRoutesByStation($station->id);
-            $return = $this->render('station', ['station' => $station, 'city' => $city, 'routes' => $routes, 'day_week' => $day_week]);
-            $cache->set('station_' . $station->id . "_" . $day_week . "_" . $pjax_z, $return, 600000);
-        } else {
-            $return = $cache_return;
-        }
-        return $return;
-    }
-
-
-    public function actionLogin() {
-        die();
-        //throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
-
-      
-        $user = new User();
-        $user->username = 'editor27';
-        $user->email = 'editor27@goonbus.ru';
-        $user->password = 'gs3FH4dger';
-        $user->status = '10';
-        $user->generateAuthKey();
-        $user->save();
-        $userRole = Yii::$app->authManager->getRole('editor');
-        Yii::$app->authManager->assign($userRole, $user->id);
-        echo 'good';
-        die();
-        // }
-
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        die('ffff');
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            $model->password = '';
-
-            return $this->render('login', [
-                        'model' => $model,
-            ]);
-        }
-    }
-
-
-    public function actionLogout() {
-        throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
-
-
-    public function actionContact() {
-        throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
-            }
-
-            return $this->refresh();
-        } else {
-            return $this->render('contact', [
-                        'model' => $model,
-            ]);
-        }
-    }
-
-
-    public function actionAbout() {
-        throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
-        return $this->render('about');
-    }
-
-
-    public function actionSignup() {
-        throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
-            return $this->goHome();
-        }
-
-        return $this->render('signup', [
-                    'model' => $model,
-        ]);
-    }
-
-
-    public function actionRequestPasswordReset() {
-        throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
-        $model = new PasswordResetRequestForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-
-                return $this->goHome();
-            } else {
-                Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
-            }
-        }
-
-        return $this->render('requestPasswordResetToken', [
-                    'model' => $model,
-        ]);
-    }
-
-
-    public function actionResetPassword($token) {
-        throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
-        try {
-            $model = new ResetPasswordForm($token);
-        } catch (InvalidArgumentException $e) {
-            throw new BadRequestHttpException($e->getMessage());
-        }
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->session->setFlash('success', 'New password saved.');
-
-            return $this->goHome();
-        }
-
-        return $this->render('resetPassword', [
-                    'model' => $model,
-        ]);
-    }
-
-
-    public function actionVerifyEmail($token) {
-        throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
-        try {
-            $model = new VerifyEmailForm($token);
-        } catch (InvalidArgumentException $e) {
-            throw new BadRequestHttpException($e->getMessage());
-        }
-        if ($user = $model->verifyEmail()) {
-            if (Yii::$app->user->login($user)) {
-                Yii::$app->session->setFlash('success', 'Your email has been confirmed!');
-                return $this->goHome();
-            }
-        }
-
-        Yii::$app->session->setFlash('error', 'Sorry, we are unable to verify your account with provided token.');
-        return $this->goHome();
-    }
-
-
-    public function actionResendVerificationEmail() {
-        throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
-        $model = new ResendVerificationEmailForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-                return $this->goHome();
-            }
-            Yii::$app->session->setFlash('error', 'Sorry, we are unable to resend verification email for the provided email address.');
-        }
-
-        return $this->render('resendVerificationEmail', [
-                    'model' => $model
-        ]);
-    }*/
+
+    /*
+      public function actionRoutemap($id, $route, $city) {
+
+      return $this->render('routemap', ['route' => $route, 'city' => $city]);
+      }
+
+      public function actionGetmarsh($id) {
+      $post = Yii::$app->request->get();
+      $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
+      $recaptcha_secret = '6LcL0rQcAAAAAHoOixrHODf_D-JGLDDT-Sme42M_';
+      $recaptcha_response = $post['capfs'];
+
+      // Отправляем POST запрос и декодируем результаты ответа
+      $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response);
+      $recaptcha = json_decode($recaptcha);
+      //  if ($_SERVER['REMOTE_ADDR']=='5.187.71.68') { var_dump($recaptcha->score);  die(); }
+      if ((isset($recaptcha->score) AND $recaptcha->score >= 0.5) OR (Yii::$app->user->can('admin')) OR ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')) {
+      $route = Route::find()->where(['id' => $id])->one();
+      $marshrut = $route->getMarshrut();
+      $return = $this->renderAjax('_route3marsh', ['marshrut' => $marshrut]);
+      return $return;
+      } else {
+      throw new \yii\web\HttpException(403, 'Нет доступа.');
+      }
+      }
+
+      public function actionGetrasp($route_id) {
+      //die('dfg');
+      $post = Yii::$app->request->get();
+      $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
+      $recaptcha_secret = '6LcL0rQcAAAAAHoOixrHODf_D-JGLDDT-Sme42M_';
+      $recaptcha_response = $post['capfs'];
+
+      // Отправляем POST запрос и декодируем результаты ответа
+      $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response);
+      //  if ($_SERVER['REMOTE_ADDR']=='5.187.71.206') { var_dump($recaptcha);  die(); }
+      $recaptcha = json_decode($recaptcha);
+
+      if ((isset($recaptcha->score) AND $recaptcha->score >= 0.5) OR (Yii::$app->user->can('admin')) OR ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')) {
+      $route = Route::find()->where(['id' => $route_id])->one();
+      if ($route->version == 2) {
+      $extra_fields = $route->getExtraFields();
+      $tw = $extra_fields[5]->value;
+      //  var_dump($tw);
+      } else {
+      $tw = $route->time_work;
+      }
+      //var_dump($route); die();
+      return $this->renderAjax('_getrasp', ['time_work' => $tw]);
+      } else {
+      throw new \yii\web\HttpException(403, 'Нет доступа.');
+      }
+      }
+
+      public function actionGetsearch($number, $text, $city_id) {
+      // var_dump($city_id); die();
+      $routes = City::getSearch($number, $text, $city_id);
+      return $this->renderAjax('_search', ['routes' => $routes]);
+      }
+
+      public function actionGetsearchindex($text) {
+      // var_dump($city_id); die();
+      $cities = City::getSearchcities($text);
+      return $this->renderAjax('_searchindex', ['cities' => $cities]);
+      }
+
+      public function actionGetmodal($rel, $route_id) {
+      return $this->renderAjax('_getmodal', ['rel' => $rel, 'route_id' => $route_id]);
+      }
+
+      public function actionSendinfo() {
+      $post = Yii::$app->request->post();
+      // var_dump($post);
+      if (Route::setRoutemessage($post['route_id'], $post['errortext'])) {
+
+
+      return true;
+      } else {
+      return false;
+      }
+      }
+
+      public function actionGetmap($route_id) {
+      $post = Yii::$app->request->get();
+      $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
+      $recaptcha_secret = '6LcL0rQcAAAAAHoOixrHODf_D-JGLDDT-Sme42M_';
+      $recaptcha_response = $post['capfs'];
+
+      // Отправляем POST запрос и декодируем результаты ответа
+      $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response);
+      $recaptcha = json_decode($recaptcha);
+      //if ($_SERVER['REMOTE_ADDR']=='23.129.64.202') { var_dump($recaptcha->score);  die(); }
+
+      if ((isset($recaptcha->score) AND $recaptcha->score >= 0.5) OR (Yii::$app->user->can('admin')) OR ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')) {
+      $cache = Yii::$app->cache;
+      // $cache->flush();
+      //$cache->delete('map1'.$route_id);
+      $cache_return = $cache->get('map1' . $route_id);
+      // if ($_SERVER['REMOTE_ADDR']=='5.187.69.40') { $cache_return=false; }
+      // $cache_return->flushValues();
+      if ($cache_return === false) {
+      $route = Route::find()->where(['id' => $route_id])->one();
+      //$s=Route::getStationRouteOne($station_rout_id);
+
+
+      $stationsall = $route->getStationRouteAll($route_id);
+      if (count($stationsall) < 3) {
+      $stations0 = ($stationsall[0]) ? $stationsall[0] : false; //$route->getStationRoute0($id);
+      $stations1 = ($stationsall[1]) ? $stationsall[1] : false; //$route->getStationRoute1($id);
+      } else {
+      $stations0 = false;
+      $stations1 = false;
+      }
+
+      $route_line = Route::getMaproute($route_id);
+      $city = City::find()->where(['id' => $route->city_id])->one();
+      $return = $this->renderAjax('_map', ['route_line' => $route_line, 'stations0' => $stations0, 'stations1' => $stations1, 'stationsall' => $stationsall, 'city' => $city]);
+      $cache->set('map1' . $route_id, $return, 1200000);
+      return $return;
+      } else {
+      return $cache_return;
+      }
+      } else {
+      throw new \yii\web\HttpException(403, 'Нет доступа.');
+      }
+      }
+
+      public function actionGetrouteonline($route_id) {
+      $post = Yii::$app->request->get();
+      $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
+      $recaptcha_secret = '6LcL0rQcAAAAAHoOixrHODf_D-JGLDDT-Sme42M_';
+      $recaptcha_response = $post['capfs'];
+      // Отправляем POST запрос и декодируем результаты ответа
+      $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response);
+      $recaptcha = json_decode($recaptcha);
+      // if ($_SERVER['REMOTE_ADDR']=='23.129.64.202') { var_dump($recaptcha->score);  die(); }
+      if ((isset($recaptcha->score) AND $recaptcha->score >= 0.5) OR (Yii::$app->user->can('admin')) OR ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')) {
+      $count_online = -1;
+      $route = Route::findOne(['id' => $route_id]);
+      $city = City::findOne(['id' => $route->city_id]);
+      //   var_dump($route_id);
+      $stationsall = $route->getStationRouteAll($route_id);
+      foreach ($stationsall as $keyr => $st) {
+      if ($st) {
+      foreach ($st as $key => $st1) {
+      $stationsall[$keyr][$key]['time_work'] = TimeWork::getTimeWork($st1['id_station_rout']);
+      }
+      }
+      }
+      $marsh = [];
+      //   use console\helpers\FuncHelper;
+      // var_dump($city_online[$route->city_id]);
+      $json = false;
+      if (isset($this->city_online_magic[$route->city_id])) {
+      $json = \console\helpers\FuncHelper::getpos_magic($route, $this->city_online_magic[$route->city_id]);
+      } elseif (isset($this->city_online[$route->city_id])) {
+      $json = \console\helpers\FuncHelper::getpos($route, $this->city_online[$route->city_id]);
+      }
+      if ($json) {
+      $route_line = Route::getMaproute($route->id);
+      $l1 = json_decode($route_line[1]['line']);  /// попутаны маршрут на карте и последовательность остановок
+      $l0 = json_decode($route_line[0]['line']);
+
+      if (!$l1) {
+      $l1 = [];
+      }
+      if (!$l0) {
+      $l0 = [];
+      }
+      foreach ($l0 as $k => $l) {
+      $l0[$k][] = 0;
+      }
+      foreach ($l1 as $k => $l) {
+      $l1[$k][] = 0;
+      }
+      if ($stationsall[0]) {
+      foreach ($stationsall[0] as $se) { // остановки встраиваем в маршрут
+      $x0 = 1;
+      $y0 = 1;
+      $z0 = 1;
+      $pos_insert = 0;
+      foreach ($l0 as $k => $l) {
+      $x00 = abs((float) $l[0] - (float) $se['y']);
+      $y00 = abs((float) $l[1] - (float) $se['x']);
+      $z00 = $x00 + $y00;
+      if ($z00 < $z0) {
+      $pos_insert = $k;
+      $z0 = $z00;
+      }
+      }
+
+      $l0 = array_merge(array_slice($l0, 0, $pos_insert),
+      [array((float) $se['y'], (float) $se['x'], 1, $se)],
+      array_slice($l0, $pos_insert, count($l0) - 1));
+      }
+      }
+      if ($stationsall[1]) {
+      foreach ($stationsall[1] as $se) { // остановки встраиваем в маршрут
+      //  var_dump($se);
+      $x0 = 1;
+      $y0 = 1;
+      $z0 = 1;
+      $pos_insert = 0;
+      foreach ($l1 as $k => $l) {
+      $x00 = abs((float) $l[0] - (float) $se['y']);
+      $y00 = abs((float) $l[1] - (float) $se['x']);
+      $z00 = $x00 + $y00;
+      if ($z00 < $z0) {
+      $pos_insert = $k;
+      $z0 = $z00;
+      }
+      }
+      $l1 = array_merge(array_slice($l1, 0, $pos_insert, true),
+      [array((float) $se['y'], (float) $se['x'], 1, $se)],
+      array_slice($l1, $pos_insert, count($l1) - 1, true));
+      }
+      }
+      //    var_dump($json->result); die();
+      if (isset($json->result) && is_array($json->result)) {
+      $count_online = count($json->result);
+      foreach ($json->result as $a) {
+      // var_dump($a); die();
+      $x0 = 1;
+      $y0 = 1;
+      $z0 = 1;
+      $pos_insert = 0;
+      $mqw = 0;
+      if ($stationsall[1][0]['name'] == $a->rl_firststation_title) {
+      $mqw = 1;
+      } else {
+      $mqw = 0;
+      }
+
+      if (count($l0) > 0 AND count($l1) == 0) {
+      $mqw = 0;
+      }
+      if ($mqw == 0) {
+      foreach ($l0 as $k => $l) {
+      $x00 = abs((float) $l[0] - (float) $a->u_lat);
+      $y00 = abs((float) $l[1] - (float) $a->u_long);
+      $z00 = $x00 + $y00;
+      if ($z00 < $z0) {
+      $pos_insert = $k;
+      $z0 = $z00;
+      }
+      }
+      if ($z0 < 0.001) {
+      $l0 = array_merge(array_slice($l0, 0, $pos_insert, true),
+      [array((float) $a->u_lat, (float) $a->u_long, 2, $a->u_statenum)],
+      array_slice($l0, $pos_insert, count($l0) - 1, true));
+      }
+      } elseif ($mqw == 1) {
+      foreach ($l1 as $k => $l) {
+      $x00 = abs((float) $l[0] - (float) $a->u_lat);
+      $y00 = abs((float) $l[1] - (float) $a->u_long);
+      $z00 = $x00 + $y00;
+      if ($z00 < $z0) {
+      $pos_insert = $k;
+      $z0 = $z00;
+      }
+      }
+      if ($z0 < 0.001) {
+      $l1 = array_merge(array_slice($l1, 0, $pos_insert, true),
+      [array((float) $a->u_lat, (float) $a->u_long, 2, $a->u_statenum)],
+      array_slice($l1, $pos_insert, count($l1) - 1, true));
+      }
+      } else {
+      echo 'error 5655';
+      }
+      }
+      } else {
+      $count_online = 0;
+      }
+      foreach ($l0 as $kkk => $l) {
+      if ($l[2] == 0) {
+      unset($l0[$kkk]);
+      }
+      if (($l[2] == 1)) {
+      $l0[$kkk][3] = $l0[$kkk][3]['id_station_rout'];
+      }
+      }
+      foreach ($l1 as $kkk => $l) {
+      if ($l[2] == 0) {
+      unset($l1[$kkk]);
+      }
+      if (($l[2] == 1)) {
+      $l1[$kkk][3] = $l1[$kkk][3]['id_station_rout'];
+      }
+      }//echo "<pre>"; var_dump($stationsall); die();
+      if (count($l0) > 1) {
+      $stationsall[0] = array_values($l0);
+      }
+      if (count($l1) > 1) {
+      $stationsall[1] = array_values($l1);
+      }
+      echo json_encode(array_values($stationsall));
+      die();
+      }
+      //  $return=$this->render('_getonline',['route'=>$route,'marsh'=>$marsh,'similar'=>$similar,'city'=>$city,'stations'=>$stations,'stationsall'=>$stationsall,'day_week' => $day_week,'count_online'=>$count_online]);
+      }
+      die('false');
+      }
+
+      public function actionGetmap2($route_id) {
+      $post = Yii::$app->request->get();
+      $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
+      $recaptcha_secret = '6LcL0rQcAAAAAHoOixrHODf_D-JGLDDT-Sme42M_';
+      $recaptcha_response = $post['capfs'];
+
+      // Отправляем POST запрос и декодируем результаты ответа
+      $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response);
+      $recaptcha = json_decode($recaptcha);
+      // if ($_SERVER['REMOTE_ADDR']=='23.129.64.202') { var_dump($recaptcha->score);  die(); }
+      if ((isset($recaptcha->score) AND $recaptcha->score >= 0.5) OR (Yii::$app->user->can('admin')) OR ($_SERVER['REMOTE_ADDR'] == '127.0.0.1')) {
+      $cache = Yii::$app->cache;
+
+      //$cache->flush();
+      //$cache->delete('map'.$route_id);
+      $cache_return = $cache->get('map' . $route_id);
+      $cache_return = false; ////////////////////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      // $cache_return->flushValues();
+      if ($cache_return === false) {
+      $route = Route::find()->where(['id' => $route_id])->one();
+      $stationsall = $route->getStationRouteAll($route_id);
+      if (count($stationsall) < 3) {
+      $stations0 = ($stationsall[0]) ? $stationsall[0] : false; //$route->getStationRoute0($id);
+      $stations1 = ($stationsall[1]) ? $stationsall[1] : false; //$route->getStationRoute1($id);
+      } else {
+      $stations0 = false;
+      $stations1 = false;
+      }
+
+      // $route_line=Route::getMaproute($route_id);
+      $city = City::find()->where(['id' => $route->city_id])->one();
+
+      /////////////////////////////
+      if (isset($this->city_online_magic[$route->city_id])) {
+      $json = \console\helpers\FuncHelper::getpos_magic($route, $this->city_online_magic[$route->city_id]);
+      } else {
+      $json = \console\helpers\FuncHelper::getpos($route, $this->city_online[$route->city_id]);
+      }
+      $route_line = Route::getMaproute($route->id);
+      $l0 = [];
+      $l1 = [];
+      $l0 = json_decode($route_line[0]['line']);
+      $l1 = json_decode($route_line[1]['line']);
+
+      if ($l0 && count($l0) > 0) {
+      foreach ($l0 as $k => $l) {
+      $l0[$k][] = 0;
+      }
+      }
+      if ($l1 && count($l1) > 0) {
+      foreach ($l1 as $k => $l) {
+      $l1[$k][] = 0;
+      }
+      }
+
+
+      if ($stationsall[0]) {
+      foreach ($stationsall[0] as $se) { // остановки встраиваем в маршрут
+      $x0 = 1;
+      $y0 = 1;
+      $z0 = 1;
+      $pos_insert = 0;
+      foreach ($l0 as $k => $l) {
+      $x00 = abs((float) $l[0] - (float) $se['y']);
+      $y00 = abs((float) $l[1] - (float) $se['x']);
+      $z00 = $x00 + $y00;
+      //if ($x00<$x0 AND $y00<$y0 AND $x00<0.01 AND $y00<0.01) { $pos_insert=$k; $x0=$x00; $y0=$y00;    }
+      if ($z00 < $z0) {
+      $pos_insert = $k;
+      $z0 = $z00;
+      }
+      }
+
+      //  var_dump($pos_insert,$x0,$y0);
+      // echo "<pre>";
+      if ($z0 < 0.005) {
+      $l0 = array_merge(array_slice($l0, 0, $pos_insert),
+      [array((float) $se['y'], (float) $se['x'], 1, $se['name'], $se['id'])],
+      array_slice($l0, $pos_insert, count($l0) - 1));
+      }
+      //  var_dump($l0);  die();
+      }
+      }
+      if ($stationsall[1]) {
+      foreach ($stationsall[1] as $se) { // остановки встраиваем в маршрут
+      $x0 = 1;
+      $y0 = 1;
+      $z0 = 1;
+      $pos_insert = 0;
+      foreach ($l1 as $k => $l) {
+      $x00 = abs((float) $l[0] - (float) $se['y']);
+      $y00 = abs((float) $l[1] - (float) $se['x']);
+      $z00 = $x00 + $y00;
+      // if ($x00<$x0 AND $y00<$y0 AND $x00<0.01 AND $y00<0.01) { $pos_insert=$k; $x0=$x00; $y0=$y00; }
+      if ($z00 < $z0) {
+      $pos_insert = $k;
+      $z0 = $z00;
+      }
+      }
+      if ($z0 < 0.005) {
+      $l1 = array_merge(array_slice($l1, 0, $pos_insert, true),
+      [array((float) $se['y'], (float) $se['x'], 1, $se['name'], $se['id'])],
+      array_slice($l1, $pos_insert, count($l1) - 1, true));
+      }
+      }
+      }
+      //    var_dump($l0,$l1); die();
+      if ($json && isset($json->result)) {
+      foreach ($json->result as $a) {
+      // var_dump($a); die();
+      $x0 = 1;
+      $y0 = 1;
+      $z0 = 1;
+      $pos_insert = 0;
+      $mqw = 1;
+      //var_dump($stationsall[0][0]['name'],$a->rl_firststation_title);echo "******";
+      if (($l0 AND count($l0) > 0) AND ($l1 AND count($l1) > 0)) {
+      if ($stationsall[1][0]['name'] == $a->rl_firststation_title) {
+      $mqw = 1;
+      } else {
+      $mqw = 0;
+      }
+      } else {
+      $mqw = 1;
+      if ($l1 AND !$l0) {
+      $l0 = $l1;
+      $l1 = null;
+      }
+      }
+      if ($l0) {
+      foreach ($l0 as $k => $l) {
+      $x00 = abs((float) $l[0] - (float) $a->u_lat);
+      $y00 = abs((float) $l[1] - (float) $a->u_long);
+      $z00 = $x00 + $y00;
+      if ($z00 < $z0) {
+      $pos_insert = $k;
+      $z0 = $z00;
+      }
+      }
+      }
+      // var_dump($pos_insert, count($l0));
+      if ($l1) {
+      foreach ($l1 as $k => $l) {
+      $x00 = abs((float) $l[0] - (float) $a->u_lat);
+      $y00 = abs((float) $l[1] - (float) $a->u_long);
+      $z00 = $x00 + $y00;
+      if ($z00 < $z0) {
+      $pos_insert = $k;
+      $z0 = $z00;
+      }
+      }
+      }
+
+
+      ///////////////////// смена id автобуса на свой
+      $m_id = 0;
+      $command = (new \yii\db\Query())
+      ->from('idtoid')
+      ->where(['u_id' => $a->u_id, 'route_id' => $route_id])
+      ->createCommand()->queryOne();
+      if ($command) {
+      $m_id = $command['m_id'];
+      } else {
+      (new \yii\db\Query())->createCommand()->insert('idtoid', [
+      'u_id' => $a->u_id,
+      'route_id' => $route_id,
+      ])->execute();
+      $command = (new \yii\db\Query())
+      ->from('idtoid')
+      ->where(['u_id' => $a->u_id, 'route_id' => $route_id])
+      ->createCommand()->queryOne();
+      $m_id = $command['m_id'];
+      }
+      ///////////////////////
+      if ($mqw == 0) {
+      $l0 = array_merge(array_slice($l0, 0, $pos_insert, true),
+      [array((float) $a->u_lat, (float) $a->u_long, 2, 0, $m_id)], // вместо 0 - $a->u_statenum
+      array_slice($l0, $pos_insert, count($l0) - 1, true));
+      } elseif ($mqw == 1) {
+      $l1 = array_merge(array_slice($l1, 0, $pos_insert, true),
+      [array((float) $a->u_lat, (float) $a->u_long, 2, 0, $m_id)], // вместо 0 - $a->u_statenum
+      array_slice($l1, $pos_insert, count($l1) - 1, true));
+      } else {
+      echo 'error 5655';
+      }
+      }
+      }
+
+
+      //  array_multisort(array_column($l0, '0'), SORT_ASC, array_column($l0, '1'), SORT_ASC, $l0);
+      //  array_multisort(array_column($l1, '0'), SORT_ASC, array_column($l1, '1'), SORT_ASC, $l1);
+      $marsh[0] = $l0;
+      $marsh[1] = $l1;
+      //  echo "<pre>";var_dump($marsh); die();
+      /////////////////////////////
+
+      $return = $this->renderAjax('_mapnew', ['route_line' => $route_line, 'marsh' => $marsh, 'stationsall' => $stationsall, 'city' => $city]);
+      $cache->set('map' . $route_id, $return, 1200000);
+      return $return;
+      } else {
+      return $cache_return;
+      }
+      } else {
+      throw new \yii\web\HttpException(403, 'Нет доступа.');
+      }
+      }
+
+      public function actionGetmaps($station_id) {
+      $cache = Yii::$app->cache;
+      // $cache->flush();
+      $cache_return = $cache->get('map_st3_' . $station_id);
+      //$cache_return = false;
+      if ($cache_return === false) {
+      $stationmany = Stationmany::find()->where(['id' => $station_id])->one();
+      $station = [];
+      if ($stationmany) {
+      foreach ($stationmany->stations as $st) {
+      $station[] = Station::find()->where(['id' => $st->id])->one();
+      }
+      $city_id = $stationmany->city_id;
+      } else {
+      $station[] = Station::find()->where(['id' => $station_id])->one();
+      $city_id = $station[0]->city_id;
+      }
+      $city = City::find()->where(['id' => $city_id])->one();
+      $return = $this->renderAjax('_mapst', ['stations' => $station, 'city' => $city]);
+      $cache->set('map_st3_' . $station_id, $return, 1200000);
+      return $return;
+      } else {
+      return $cache_return;
+      }
+      }
+
+      public function actionGetost($route_id, $ostan_ishod) {
+      $s = Route::getStationRouteOld($route_id, $ostan_ishod);
+
+      return $this->renderAjax('_getost', ['s' => $s]);
+      }
+
+      public function actionStationmany($id, $station = false, $city = false, $day_week = 0) {
+      //  die('dssd');
+      if ($station == false OR $city == false) {
+      throw new \yii\web\HttpException(404, 'Не найдена');
+      }
+      // var_dump($day_week); die();
+      //var_dump($station->stations); die();
+
+      $pjax_z = 0;
+      $post = Yii::$app->request->get();
+      if (isset($post['day_week']) AND !isset($post['_pjax'])) {
+      $url = explode("?", $_SERVER['REQUEST_URI']);
+      Yii::$app->response->redirect("https://" . $_SERVER['SERVER_NAME'] . $url[0], 301)->send();
+      Yii::$app->end();
+      return;
+      } elseif (isset($post['_pjax'])) {
+      $pjax_z = 1;
+      }
+
+      if ($day_week == 0) { // определяем текущий день недели, и выводим расписание для него. Если этого дня недели нет в расписании то ближайший день недели
+      $day_week = date('w');
+      }
+
+      $cache = Yii::$app->cache;
+      // $cache->flush();
+      $cache_return = $cache->get('stationmany2_' . $station->id . "_" . $day_week . "_" . $pjax_z);
+      if ($_SERVER['REMOTE_ADDR'] == '5.187.71.244') {
+      //var_dump('station_'.$station->id."_".$day_week."_".$pjax_z,$cache_return); die('453');
+      $cache_return = false;
+      }
+
+      if ($cache_return === false) {
+
+      $all_stations = $station->stations;
+      $routes = [0 => [], 1 => [], 2 => [], 3 => [], 4 => [], 5 => []];
+      foreach ($all_stations as $st) {
+      $r = Station::getRoutesByStation($st->id);
+
+      for ($ie = 1; $ie <= 5; $ie++) {
+      if (isset($r[$ie])) {
+      $routes[$ie] = $routes[$ie] + $r[$ie]; //array_merge($routes[$ie],$r[$ie]);
+      }
+      }
+      }
+
+      $return = $this->render('stationmany', ['station' => $station, 'city' => $city, 'routes' => $routes, 'day_week' => $day_week]);
+      $cache->set('stationmany2_' . $station->id . "_" . $day_week . "_" . $pjax_z, $return, 600000);
+      } else {
+      $return = $cache_return;
+      }
+      return $return;
+      }
+
+      public function actionStation($id, $station, $city, $day_week = 0) {
+      if ($day_week == '999') {
+      die();
+      $array_st = [];
+      $stations = Station::find()->where("id>64999 AND id<85000 AND inmany=0")->all();
+      foreach ($stations as $s) {
+      if (!in_array($s->id, $array_st)) {
+      $s->name = str_replace("'", "\'", $s->name);
+      $station_all = Station::find()->where("name='" . $s->name . "' AND city_id='" . $s->city_id . "' AND inmany=0")->all();
+      $stationmany = new Stationmany;
+      $stationmany->name = $s->name;
+      $stationmany->alias = $s->alias;
+      $stationmany->city_id = $s->city_id;
+      $stationmany->save();
+      $stationmany->refresh();
+      foreach ($station_all as $value) {
+      (new \yii\db\Query())->createCommand()->insert('stationmany_station', [
+      'stationmany_id' => $stationmany->id,
+      'station_id' => $value->id,
+      ])->execute();
+      $value->inmany = 1;
+      $value->save();
+      $array_st[] = $value->id; // записываем уже обработаные остановки
+      }
+      }
+      }
+      die('123');
+      }
+
+
+
+
+
+      /////////////////
+
+      $pjax_z = 0;
+      $post = Yii::$app->request->get();
+      if (isset($post['day_week']) AND !isset($post['_pjax'])) {
+      $url = explode("?", $_SERVER['REQUEST_URI']);
+      Yii::$app->response->redirect("https://" . $_SERVER['SERVER_NAME'] . $url[0], 301)->send();
+      Yii::$app->end();
+      return;
+      } elseif (isset($post['_pjax'])) {
+      $pjax_z = 1;
+      }
+
+      if ($day_week == 0) { // определяем текущий день недели, и выводим расписание для него. Если этого дня недели нет в расписании то ближайший день недели
+      $day_week = date('w');
+      }
+
+      $cache = Yii::$app->cache;
+      // $cache->flush();
+      $cache_return = $cache->get('station_' . $station->id . "_" . $day_week . "_" . $pjax_z);
+
+      if ($cache_return === false) {
+      $routes = Station::getRoutesByStation($station->id);
+      $return = $this->render('station', ['station' => $station, 'city' => $city, 'routes' => $routes, 'day_week' => $day_week]);
+      $cache->set('station_' . $station->id . "_" . $day_week . "_" . $pjax_z, $return, 600000);
+      } else {
+      $return = $cache_return;
+      }
+      return $return;
+      }
+
+
+      public function actionLogin() {
+      die();
+      //throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
+
+
+      $user = new User();
+      $user->username = 'editor27';
+      $user->email = 'editor27@goonbus.ru';
+      $user->password = 'gs3FH4dger';
+      $user->status = '10';
+      $user->generateAuthKey();
+      $user->save();
+      $userRole = Yii::$app->authManager->getRole('editor');
+      Yii::$app->authManager->assign($userRole, $user->id);
+      echo 'good';
+      die();
+      // }
+
+      if (!Yii::$app->user->isGuest) {
+      return $this->goHome();
+      }
+
+      die('ffff');
+      $model = new LoginForm();
+      if ($model->load(Yii::$app->request->post()) && $model->login()) {
+      return $this->goBack();
+      } else {
+      $model->password = '';
+
+      return $this->render('login', [
+      'model' => $model,
+      ]);
+      }
+      }
+
+
+      public function actionLogout() {
+      throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
+      Yii::$app->user->logout();
+
+      return $this->goHome();
+      }
+
+
+      public function actionContact() {
+      throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
+      $model = new ContactForm();
+      if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+      if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
+      Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
+      } else {
+      Yii::$app->session->setFlash('error', 'There was an error sending your message.');
+      }
+
+      return $this->refresh();
+      } else {
+      return $this->render('contact', [
+      'model' => $model,
+      ]);
+      }
+      }
+
+
+      public function actionAbout() {
+      throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
+      return $this->render('about');
+      }
+
+
+      public function actionSignup() {
+      throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
+      $model = new SignupForm();
+      if ($model->load(Yii::$app->request->post()) && $model->signup()) {
+      Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
+      return $this->goHome();
+      }
+
+      return $this->render('signup', [
+      'model' => $model,
+      ]);
+      }
+
+
+      public function actionRequestPasswordReset() {
+      throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
+      $model = new PasswordResetRequestForm();
+      if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+      if ($model->sendEmail()) {
+      Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
+
+      return $this->goHome();
+      } else {
+      Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
+      }
+      }
+
+      return $this->render('requestPasswordResetToken', [
+      'model' => $model,
+      ]);
+      }
+
+
+      public function actionResetPassword($token) {
+      throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
+      try {
+      $model = new ResetPasswordForm($token);
+      } catch (InvalidArgumentException $e) {
+      throw new BadRequestHttpException($e->getMessage());
+      }
+
+      if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
+      Yii::$app->session->setFlash('success', 'New password saved.');
+
+      return $this->goHome();
+      }
+
+      return $this->render('resetPassword', [
+      'model' => $model,
+      ]);
+      }
+
+
+      public function actionVerifyEmail($token) {
+      throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
+      try {
+      $model = new VerifyEmailForm($token);
+      } catch (InvalidArgumentException $e) {
+      throw new BadRequestHttpException($e->getMessage());
+      }
+      if ($user = $model->verifyEmail()) {
+      if (Yii::$app->user->login($user)) {
+      Yii::$app->session->setFlash('success', 'Your email has been confirmed!');
+      return $this->goHome();
+      }
+      }
+
+      Yii::$app->session->setFlash('error', 'Sorry, we are unable to verify your account with provided token.');
+      return $this->goHome();
+      }
+
+
+      public function actionResendVerificationEmail() {
+      throw new \yii\web\NotFoundHttpException('Страница не найдена'); //////////////////////////////////////////////////////////////////
+      $model = new ResendVerificationEmailForm();
+      if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+      if ($model->sendEmail()) {
+      Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
+      return $this->goHome();
+      }
+      Yii::$app->session->setFlash('error', 'Sorry, we are unable to resend verification email for the provided email address.');
+      }
+
+      return $this->render('resendVerificationEmail', [
+      'model' => $model
+      ]);
+      } */
 }

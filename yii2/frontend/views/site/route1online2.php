@@ -39,7 +39,7 @@ $title_str = (($route->number != '-' && $route->number != '—') ? ($route->numb
 if ($route->type_direction == '3') {
     $this->title = "Расписание " . $type_transport . " " . $title_str;
 } else {
-    $this->title = $type_transport_iminit . " " . $route->number . " - расписание, отслеживание онлайн в " . $city_s[5]; //$this->title="Расписание ".$type_transport." ".$title_str." в ".$city_s[5]."";
+    $this->title = $type_transport_iminit . " " . $route->number . " - расписание, онлайн в " . $city_s[5]; //$this->title="Расписание ".$type_transport." ".$title_str." в ".$city_s[5]."";
 }
 
 if ($route->type_direction == '3') { // межгород
@@ -143,7 +143,7 @@ if (!(is_array($names) AND count($names) > 4)) {
     </a>
     <div class="header-info">
        <span class="header-info__time">
-            <img src="/img/time.svg" alt="time"> 
+            <img src="img/time.svg" alt="time"> 
         </span>
         <span class="header-info__weather">
             
@@ -174,7 +174,18 @@ if (!(is_array($names) AND count($names) > 4)) {
         <h2 class="nav__item" data-modal="map">Онлайн карта</h2>
     </nav>
 </header>
-
+<div class="header2">
+<script async src="https://ad.mail.ru/static/ads-async.js"></script>
+<ins 
+    class="mrg-tag"
+    style="display:inline-block;width:auto;height:300px"
+    data-ad-client="ad-1817673"
+    data-ad-slot="1817673">
+</ins>
+<script>
+    (MRGtag = window.MRGtag || []).push({});
+</script>
+</div>
 <main class="stops-section">
     <p class="stops__heading">Остановки:</p>
 
@@ -273,8 +284,8 @@ if (!(is_array($names) AND count($names) > 4)) {
 		</div>
 		<nav class="nav">
 			<h2 class="nav__item modal_close">Расписание</h2>
-			<h2 class="nav__item is_active" data-modal="scheme">Онлайн схема</h2>
-			<h2 class="nav__item" data-modal="map">Онлайн карта</h2>
+			<h2 class="nav__item is_active" data-modal="scheme" onclick="ym(96876837, 'reachGoal', 'clksxem'); return true;">Онлайн схема</h2>
+			<h2 class="nav__item" data-modal="map" onclick="ym(96876837, 'reachGoal', 'clkmap'); return true;">Онлайн карта</h2>
 		</nav>
 		<div class="scheme-section">
 			

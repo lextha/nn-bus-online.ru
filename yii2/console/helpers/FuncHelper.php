@@ -29,7 +29,7 @@ class FuncHelper {
             self::$proxyList = []; // Возвращаем пустой массив, чтобы не было ошибок
             return self::$proxyList;
         }
-
+    
         // Читаем все строки из файла в массив
         $lines = file($proxyFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 

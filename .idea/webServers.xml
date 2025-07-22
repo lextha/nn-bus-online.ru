@@ -2,7 +2,7 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="612438d7-e55f-40a6-9210-6642c872ef85" name="bus_dop" url="http://193.168.49.51">
+      <webServer id="311d1cce-825a-4a0c-a286-a7c288d87896" name="bus_dop" url="http://193.168.49.51">
         <fileTransfer host="193.168.49.51" port="21">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />

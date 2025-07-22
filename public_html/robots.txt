@@ -1,5 +1,5 @@
 User-agent: *
 Disallow: /index.php
-Sitemap: https://arh-bus.ru/sitemap.xml
+Sitemap: https://nn-bus-online.ru/sitemap.xml
 
-Host: https://arh-bus.ru
+Host: https://nn-bus-online.ru

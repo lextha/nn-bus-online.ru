@@ -1411,7 +1411,7 @@ class CarlController extends \yii\console\Controller
     }
         
     
-     public function actionGobusOmsk() { ////// КОНСОЛЬ из папки yii:  yii carl/goarh-bus
+     public function actionGobusOmsk() { ////// КОНСОЛЬ из папки yii:  yii carl/gobus-omsk
 
          
                  $post='';
