@@ -18,6 +18,7 @@ class FuncHelper {
         // Если список уже был загружен ранее, просто возвращаем его
         if (self::$proxyList !== null) {
             return self::$proxyList;
+
         }
 
         // Используем псевдоним, который вы задали в bootstrap.php
